@@ -2,7 +2,26 @@
 
 import React, { useState, useMemo, useEffect } from 'react'
 import { Search, Filter, Bell, Calendar, MapPin, Building, Percent, ChevronLeft, ChevronRight, Loader2, Plus, X, Moon, Sun, BellRing, BellOff, FileText, Clock, TrendingUp, Bookmark, BookmarkCheck, AlertTriangle, BarChart } from 'lucide-react'
-// import { RefreshCw } from 'lucide-react' 방금 삭제함. 추후 추가해도 됨. //
+// import { RefreshCw } from 'lucide-react' 방금 삭제함. 추후 추가해도 됨. 
+
+//gemini 2.5 flash 사용
+// Job.ts 또는 types.ts 파일에 정의되어 있을 가능성이 높습니다.
+// 만약 없다면 JobHunter.tsx 파일 상단에 추가해도 무방합니다.
+interface Job {
+  id: number;
+  title: string;
+  company: string;
+  location: string;
+  posted_date: string;
+  deadline: string;
+  description: string;
+  url: string;
+  keywords: string[];
+  salary_min: number;
+  salary_max: number;
+  employment_type: string;
+  remote_available: boolean;
+}
 
 
 // Mock 데이터
@@ -55,7 +74,8 @@ const mockJobsData = [
 ]
 
 const JobHunter = () => {
-  const [jobs, setJobs] = useState([])
+  //const [jobs, setJobs] = useState([])
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true)
   const [userKeywords, setUserKeywords] = useState(['React', 'UX Designer'])
   const [keywordNotifications, setKeywordNotifications] = useState([
