@@ -4,9 +4,7 @@ import React, { useState, useMemo, useEffect } from 'react'
 import { Search, Filter, Bell, Calendar, MapPin, Building, Percent, ChevronLeft, ChevronRight, Loader2, Plus, X, Moon, Sun, BellRing, BellOff, FileText, Clock, TrendingUp, Bookmark, BookmarkCheck, AlertTriangle, BarChart } from 'lucide-react'
  
 
-//gemini 2.5 flash 사용
-// Job.ts 또는 types.ts 파일에 정의되어 있을 가능성이 높습니다.
-// 만약 없다면 JobHunter.tsx 파일 상단에 추가해도 무방합니다.
+// Type definitions for the JobHunter component
 interface Job {
   id: number;
   title: string;
