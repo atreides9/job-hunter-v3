@@ -84,6 +84,7 @@ const JobHunter = () => {
   //const [jobs, setJobs] = useState([])
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
   const [userKeywords, setUserKeywords] = useState(['React', 'UX Designer'])
   const [keywordNotifications, setKeywordNotifications] = useState([
     { keyword: 'React', frequency: 'daily' },
@@ -111,13 +112,20 @@ const JobHunter = () => {
     border: darkMode ? '#334155' : '#e2e8f0'
   }
 
+  // 컴포넌트 마운트 상태 추적
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   // 데이터 로딩
   useEffect(() => {
-    setTimeout(() => {
-      setJobs(mockJobsData)
-      setLoading(false)
-    }, 800)
-  }, [])
+    if (mounted) {
+      setTimeout(() => {
+        setJobs(mockJobsData)
+        setLoading(false)
+      }, 800)
+    }
+  }, [mounted])
 
   // 키워드 매칭 계산
   const processedJobs = useMemo(() => {
@@ -242,6 +250,11 @@ const JobHunter = () => {
     `평균 매칭률: ${stats.avgMatchScore}%`,
     userKeywords.length > 0 ? `가장 많이 매칭된 키워드: ${userKeywords[0]}` : ''
   ].filter(Boolean)
+
+  // 서버 사이드 렌더링 시에는 빈 div 반환
+  if (!mounted) {
+    return <div />
+  }
 
   if (loading) {
     return (
