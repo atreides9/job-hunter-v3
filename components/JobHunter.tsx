@@ -1,7 +1,9 @@
 'use client'
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { Search, Filter, Bell, Calendar, MapPin, Building, Percent, ChevronLeft, ChevronRight, Loader2, RefreshCw, Plus, X, Moon, Sun, BellRing, BellOff, FileText, Clock, TrendingUp, Bookmark, BookmarkCheck, AlertTriangle, BarChart } from 'lucide-react'
+import { Search, Filter, Bell, Calendar, MapPin, Building, Percent, ChevronLeft, ChevronRight, Loader2, Plus, X, Moon, Sun, BellRing, BellOff, FileText, Clock, TrendingUp, Bookmark, BookmarkCheck, AlertTriangle, BarChart } from 'lucide-react'
+// import { RefreshCw } from 'lucide-react' 방금 삭제함. 추후 추가해도 됨. //
+
 
 // Mock 데이터
 const mockJobsData = [
@@ -115,7 +117,7 @@ const JobHunter = () => {
 
   // 필터링 및 정렬
   const filteredJobs = useMemo(() => {
-    let filtered = processedJobs.filter(job => job.matchScore >= filterScore)
+    const filtered = processedJobs.filter(job => job.matchScore >= filterScore)
     return filtered.sort((a, b) => {
       switch (sortBy) {
         case 'matchScore': 
@@ -1143,8 +1145,7 @@ const JobHunter = () => {
               marginBottom: '1rem', 
               color: theme.textSecondary 
             }}>
-              키워드별 알림 설정, 지원 이력 자동 저장, 다크모드까지! 
-              이제 진짜 취준생이 원하는 모든 기능이 들어있어요 💜
+              키워드별 알림 설정, 지원 이력 자동 저장, 다크모드 기능 추가!
             </p>
             <div style={{ 
               display: 'flex', 
