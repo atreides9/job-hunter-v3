@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react'
 import { Search, Filter, Bell, Calendar, MapPin, Building, Percent, ChevronLeft, ChevronRight, Loader2, Plus, X, Moon, Sun, BellRing, BellOff, FileText, Clock, TrendingUp, Bookmark, BookmarkCheck, AlertTriangle, BarChart } from 'lucide-react'
-// import { RefreshCw } from 'lucide-react' 방금 삭제함. 추후 추가해도 됨. 
+ 
 
 //gemini 2.5 flash 사용
 // Job.ts 또는 types.ts 파일에 정의되어 있을 가능성이 높습니다.
@@ -21,6 +21,13 @@ interface Job {
   salary_max: number;
   employment_type: string;
   remote_available: boolean;
+}
+
+interface ApplicationHistory {
+  jobId: number;
+  appliedAt: string;
+  status: string;
+  notes: string;
 }
 
 
@@ -87,9 +94,9 @@ const JobHunter = () => {
   const [filterScore, setFilterScore] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [darkMode, setDarkMode] = useState(false)
-  const [applicationHistory, setApplicationHistory] = useState([])
-  const [bookmarkedJobs, setBookmarkedJobs] = useState([])
-  const [jobNotes, setJobNotes] = useState({})
+  const [applicationHistory, setApplicationHistory] = useState<ApplicationHistory[]>([])
+  const [bookmarkedJobs, setBookmarkedJobs] = useState<number[]>([])
+  const [jobNotes, setJobNotes] = useState<{[key: number]: string}>({})
   const [showApplicationHistory, setShowApplicationHistory] = useState(false)
   const [showInsights, setShowInsights] = useState(false)
   const [showKeywordSettings, setShowKeywordSettings] = useState(false)
@@ -169,20 +176,20 @@ const JobHunter = () => {
   }
 
   // 키워드 제거
-  const removeKeyword = (keyword) => {
+  const removeKeyword = (keyword: string) => {
     setUserKeywords(userKeywords.filter(k => k !== keyword))
     setKeywordNotifications(keywordNotifications.filter(k => k.keyword !== keyword))
   }
 
   // 알림 설정 변경
-  const updateKeywordNotification = (keyword, frequency) => {
+  const updateKeywordNotification = (keyword: string, frequency: string) => {
     setKeywordNotifications(prev => 
       prev.map(k => k.keyword === keyword ? { ...k, frequency } : k)
     )
   }
 
   // 지원하기
-  const applyToJob = (job) => {
+  const applyToJob = (job: Job) => {
     const newApplication = {
       jobId: job.id,
       appliedAt: new Date().toISOString(),
@@ -194,7 +201,7 @@ const JobHunter = () => {
   }
 
   // 북마크 토글
-  const toggleBookmark = (jobId) => {
+  const toggleBookmark = (jobId: number) => {
     setBookmarkedJobs(prev => 
       prev.includes(jobId) 
         ? prev.filter(id => id !== jobId)
@@ -203,12 +210,12 @@ const JobHunter = () => {
   }
 
   // 메모 업데이트
-  const updateJobNote = (jobId, note) => {
+  const updateJobNote = (jobId: number, note: string) => {
     setJobNotes(prev => ({ ...prev, [jobId]: note }))
   }
 
   // 하이라이팅
-  const highlightKeywords = (text) => {
+  const highlightKeywords = (text: string) => {
     if (!userKeywords.length) return text
     let highlightedText = text
     userKeywords.forEach(keyword => {
@@ -585,8 +592,8 @@ const JobHunter = () => {
                 fontWeight: '500',
                 transition: 'background-color 0.2s ease'
               }}
-              onMouseOver={(e) => e.target.style.backgroundColor = '#5a67d8'}
-              onMouseOut={(e) => e.target.style.backgroundColor = '#667eea'}
+              onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = '#5a67d8'}
+              onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = '#667eea'}
             >
               <Plus size={16} /> 추가
             </button>
@@ -937,8 +944,8 @@ const JobHunter = () => {
                               alignItems: 'center',
                               gap: '0.25rem'
                             }}
-                            onMouseOver={(e) => e.target.style.backgroundColor = '#059669'}
-                            onMouseOut={(e) => e.target.style.backgroundColor = '#10b981'}
+                            onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = '#059669'}
+                            onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = '#10b981'}
                           >
                             🔍 {keyword}
                           </span>
@@ -1000,8 +1007,8 @@ const JobHunter = () => {
                           alignItems: 'center',
                           gap: '0.5rem'
                         }}
-                        onMouseOver={(e) => e.target.style.backgroundColor = hasApplied ? '#059669' : '#5a67d8'}
-                        onMouseOut={(e) => e.target.style.backgroundColor = hasApplied ? '#10b981' : '#667eea'}
+                        onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = hasApplied ? '#059669' : '#5a67d8'}
+                        onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = hasApplied ? '#10b981' : '#667eea'}
                       >
                         {hasApplied ? <BookmarkCheck size={16} /> : <FileText size={16} />}
                         {hasApplied ? '지원완료' : '지원하기'}
@@ -1028,14 +1035,14 @@ const JobHunter = () => {
                         }}
                         onMouseOver={(e) => {
                           if (!isBookmarked) {
-                            e.target.style.backgroundColor = '#667eea'
-                            e.target.style.color = 'white'
+                            (e.target as HTMLElement).style.backgroundColor = '#667eea'
+                            ;(e.target as HTMLElement).style.color = 'white'
                           }
                         }}
                         onMouseOut={(e) => {
                           if (!isBookmarked) {
-                            e.target.style.backgroundColor = 'transparent'
-                            e.target.style.color = '#667eea'
+                            (e.target as HTMLElement).style.backgroundColor = 'transparent'
+                            ;(e.target as HTMLElement).style.color = '#667eea'
                           }
                         }}
                       >
