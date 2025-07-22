@@ -756,14 +756,19 @@ const JobHunter = () => {
               const hasApplied = applicationHistory.some(app => app.jobId === job.id)
               const daysUntilDeadline = job.deadline ? Math.ceil((new Date(job.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : null
               
+              // 수정된 카드 스타일 - 위계구분 강화
               const cardStyle = job.matchScore >= 70 ? {
                 background: darkMode ? 'linear-gradient(135deg, #064e3b 0%, #065f46 100%)' : 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
                 border: '2px solid #10b981',
-                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.15)'
+                boxShadow: darkMode 
+                  ? '0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 2px #10b981' 
+                  : '0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 2px #10b981'
               } : {
                 background: theme.cardBg,
-                border: `1px solid ${theme.border}`,
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+                border: darkMode ? `2px solid ${theme.border}` : `1px solid ${theme.border}`,
+                boxShadow: darkMode 
+                  ? '0 8px 25px rgba(0, 0, 0, 0.25)' 
+                  : '0 4px 15px rgba(0, 0, 0, 0.08)'
               }
               
               return (
@@ -780,8 +785,8 @@ const JobHunter = () => {
                   onMouseOver={(e) => {
                     e.currentTarget.style.transform = 'translateY(-2px)'
                     e.currentTarget.style.boxShadow = darkMode 
-                      ? '0 8px 25px rgba(0, 0, 0, 0.4)' 
-                      : '0 8px 25px rgba(0, 0, 0, 0.15)'
+                      ? '0 12px 35px rgba(0, 0, 0, 0.4)' 
+                      : '0 12px 35px rgba(0, 0, 0, 0.15)'
                   }}
                   onMouseOut={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)'
@@ -836,15 +841,78 @@ const JobHunter = () => {
                   }}>
                     <div style={{ flex: 1 }}>
                       <h3 style={{ 
-                        fontSize: '1.25rem', 
+                        fontSize: window.innerWidth < 640 ? '1.125rem' : '1.25rem', 
                         fontWeight: '600', 
                         marginBottom: '0.5rem', 
-                        paddingRight: '5rem',
+                        paddingRight: window.innerWidth < 640 ? '3rem' : '5rem',
                         color: theme.text,
-                        lineHeight: 1.3
+                        lineHeight: 1.3,
+                        wordBreak: 'keep-all',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
                       }} 
                       dangerouslySetInnerHTML={{ __html: highlightKeywords(job.title) }} 
                       />
+                      
+                      {/* 메리트 칩들을 헤더 바로 아래로 이동 */}
+                      <div style={{
+                        display: 'flex',
+                        gap: '0.5rem',
+                        marginBottom: '0.75rem',
+                        flexWrap: 'wrap'
+                      }}>
+                        {job.remote_available && (
+                          <span style={{ 
+                            background: darkMode ? '#064e3b' : '#dcfce7', 
+                            color: darkMode ? '#34d399' : '#166534', 
+                            padding: '0.375rem 0.75rem', 
+                            borderRadius: '0.375rem', 
+                            fontSize: '0.813rem',
+                            fontWeight: '600',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.375rem',
+                            border: darkMode ? '1px solid #10b981' : 'none'
+                          }}>
+                            🏠 원격근무
+                          </span>
+                        )}
+                        {job.salary_max >= 6000 && (
+                          <span style={{ 
+                            background: darkMode ? '#3730a3' : '#e0e7ff', 
+                            color: darkMode ? '#a5b4fc' : '#4338ca', 
+                            padding: '0.375rem 0.75rem', 
+                            borderRadius: '0.375rem', 
+                            fontSize: '0.813rem',
+                            fontWeight: '600',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.375rem',
+                            border: darkMode ? '1px solid #6366f1' : 'none'
+                          }}>
+                            💰 고연봉
+                          </span>
+                        )}
+                        {job.employment_type === 'full-time' && (
+                          <span style={{ 
+                            background: darkMode ? '#7c2d12' : '#fee2e2', 
+                            color: darkMode ? '#fca5a5' : '#dc2626', 
+                            padding: '0.375rem 0.75rem', 
+                            borderRadius: '0.375rem', 
+                            fontSize: '0.813rem',
+                            fontWeight: '600',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.375rem',
+                            border: darkMode ? '1px solid #ef4444' : 'none'
+                          }}>
+                            ⏰ 정규직
+                          </span>
+                        )}
+                      </div>
                       
                       <div style={{ 
                         display: 'flex', 
@@ -866,21 +934,6 @@ const JobHunter = () => {
                         {job.deadline && (
                           <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                             <Clock size={14} /> 마감: {new Date(job.deadline).toLocaleDateString('ko-KR')}
-                          </span>
-                        )}
-                        {job.remote_available && (
-                          <span style={{ 
-                            background: '#dcfce7', 
-                            color: '#166534', 
-                            padding: '0.25rem 0.5rem', 
-                            borderRadius: '0.25rem', 
-                            fontSize: '0.75rem',
-                            fontWeight: '500',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.25rem'
-                          }}>
-                            🏠 원격근무
                           </span>
                         )}
                       </div>
