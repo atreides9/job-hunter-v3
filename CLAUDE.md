@@ -3,6 +3,7 @@
 ## Important Instructions
 - **ALWAYS commit and push changes to GitHub after every modification**
 - Use proper commit messages with descriptive titles
+- **ALWAYS include 'claude cli' in commit messages**
 - Include the Claude Code footer in all commits
 
 ## Project Information
