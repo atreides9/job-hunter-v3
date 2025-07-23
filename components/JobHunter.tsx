@@ -223,6 +223,15 @@ const JobHunter = () => {
     setJobNotes(prev => ({ ...prev, [jobId]: note }))
   }
 
+  // 메모 저장
+  const saveJobNote = (jobId: number) => {
+    // 현재는 로컬 상태에만 저장되지만, 향후 서버나 로컬스토리지에 저장 가능
+    const note = jobNotes[jobId] || ''
+    console.log(`Job ${jobId} 메모 저장됨:`, note)
+    // 저장 완료 표시를 위한 간단한 피드백
+    alert('메모가 저장되었습니다!')
+  }
+
   // 하이라이팅
   const highlightKeywords = (text: string) => {
     if (!userKeywords.length) return text
@@ -1028,28 +1037,57 @@ const JobHunter = () => {
 
                   {/* 메모 입력 */}
                   <div style={{ marginBottom: '1rem' }}>
-                    <textarea
-                      placeholder="💭 이 공고에 대한 메모를 추가하세요... (예: 포트폴리오 준비, 면접 질문 등)"
-                      value={jobNotes[job.id] || ''}
-                      onChange={(e) => updateJobNote(job.id, e.target.value)}
-                      onClick={(e) => e.stopPropagation()}
-                      style={{
-                        width: '100%',
-                        minHeight: '3rem',
-                        padding: '0.75rem',
-                        border: `1px solid ${theme.border}`,
-                        borderRadius: '0.5rem',
-                        fontSize: '0.875rem',
-                        background: darkMode ? '#0f172a' : '#f8fafc',
-                        color: theme.text,
-                        resize: 'vertical',
-                        fontFamily: 'inherit',
-                        outline: 'none',
-                        transition: 'border-color 0.2s ease'
-                      }}
-                      onFocus={(e) => e.target.style.borderColor = '#667eea'}
-                      onBlur={(e) => e.target.style.borderColor = theme.border}
-                    />
+                    <div style={{
+                      display: 'flex',
+                      gap: '0.75rem',
+                      alignItems: 'flex-start'
+                    }}>
+                      <textarea
+                        placeholder="💭 이 공고에 대한 메모를 추가하세요... (예: 포트폴리오 준비, 면접 질문 등)"
+                        value={jobNotes[job.id] || ''}
+                        onChange={(e) => updateJobNote(job.id, e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                          flex: 1,
+                          minHeight: '3rem',
+                          padding: '0.75rem',
+                          border: `1px solid ${theme.border}`,
+                          borderRadius: '0.5rem',
+                          fontSize: '0.875rem',
+                          background: darkMode ? '#0f172a' : '#f8fafc',
+                          color: theme.text,
+                          resize: 'vertical',
+                          fontFamily: 'inherit',
+                          outline: 'none',
+                          transition: 'border-color 0.2s ease'
+                        }}
+                        onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                        onBlur={(e) => e.target.style.borderColor = theme.border}
+                      />
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          saveJobNote(job.id)
+                        }}
+                        style={{
+                          background: '#10b981',
+                          color: 'white',
+                          border: 'none',
+                          padding: '0.75rem 1rem',
+                          borderRadius: '0.5rem',
+                          cursor: 'pointer',
+                          fontWeight: '500',
+                          fontSize: '0.875rem',
+                          transition: 'background-color 0.2s ease',
+                          flexShrink: 0,
+                          height: 'fit-content'
+                        }}
+                        onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = '#059669'}
+                        onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = '#10b981'}
+                      >
+                        저장하기
+                      </button>
+                    </div>
                   </div>
 
                   <div style={{ 
