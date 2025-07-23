@@ -101,6 +101,8 @@ const JobHunter = () => {
   const [showKeywordSettings, setShowKeywordSettings] = useState(false)
   const [showApplicationPopup, setShowApplicationPopup] = useState(false)
   const [currentAppliedJob, setCurrentAppliedJob] = useState<Job | null>(null)
+  const [showJobDetails, setShowJobDetails] = useState(false)
+  const [selectedJobForDetails, setSelectedJobForDetails] = useState<Job | null>(null)
   const jobsPerPage = 3
 
   // 다크모드 테마
@@ -1312,7 +1314,10 @@ const JobHunter = () => {
                 <button
                   onClick={() => {
                     setShowApplicationPopup(false)
-                    setShowApplicationHistory(true)
+                    if (currentAppliedJob) {
+                      setSelectedJobForDetails(currentAppliedJob)
+                      setShowJobDetails(true)
+                    }
                   }}
                   style={{
                     background: '#667eea',
@@ -1336,6 +1341,331 @@ const JobHunter = () => {
                 
                 <button
                   onClick={() => setShowApplicationPopup(false)}
+                  style={{
+                    background: 'transparent',
+                    color: theme.text,
+                    border: `1px solid ${theme.border}`,
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '0.5rem',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    fontSize: '0.875rem',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseOver={(e) => {
+                    (e.target as HTMLElement).style.backgroundColor = theme.border
+                  }}
+                  onMouseOut={(e) => {
+                    (e.target as HTMLElement).style.backgroundColor = 'transparent'
+                  }}
+                >
+                  닫기
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Job Details Modal */}
+        {showJobDetails && selectedJobForDetails && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+            padding: '1rem'
+          }}>
+            <div style={{
+              background: theme.cardBg,
+              borderRadius: '1rem',
+              padding: '2rem',
+              maxWidth: '800px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              border: `1px solid ${theme.border}`,
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
+              position: 'relative'
+            }}>
+              {/* Close button */}
+              <button
+                onClick={() => {
+                  setShowJobDetails(false)
+                  setSelectedJobForDetails(null)
+                }}
+                style={{
+                  position: 'absolute',
+                  top: '1rem',
+                  right: '1rem',
+                  background: 'transparent',
+                  border: 'none',
+                  color: theme.textSecondary,
+                  cursor: 'pointer',
+                  padding: '0.5rem',
+                  borderRadius: '0.25rem',
+                  transition: 'background-color 0.2s ease'
+                }}
+                onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = theme.border}
+                onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = 'transparent'}
+              >
+                <X size={24} />
+              </button>
+
+              {/* Job header */}
+              <div style={{ marginBottom: '2rem', paddingRight: '3rem' }}>
+                <h2 style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                  color: theme.text,
+                  marginBottom: '1rem',
+                  lineHeight: 1.3
+                }} dangerouslySetInnerHTML={{ __html: highlightKeywords(selectedJobForDetails.title) }} />
+                
+                <div style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '1rem',
+                  fontSize: '0.875rem',
+                  color: theme.textSecondary,
+                  marginBottom: '1rem'
+                }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    <Building size={16} /> {selectedJobForDetails.company}
+                  </span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    <MapPin size={16} /> {selectedJobForDetails.location}
+                  </span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    <Calendar size={16} /> 등록일: {new Date(selectedJobForDetails.posted_date).toLocaleDateString('ko-KR')}
+                  </span>
+                  {selectedJobForDetails.deadline && (
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <Clock size={16} /> 마감: {new Date(selectedJobForDetails.deadline).toLocaleDateString('ko-KR')}
+                    </span>
+                  )}
+                </div>
+
+                {/* Merit badges */}
+                <div style={{
+                  display: 'flex',
+                  gap: '0.5rem',
+                  marginBottom: '1rem',
+                  flexWrap: 'wrap'
+                }}>
+                  {selectedJobForDetails.remote_available && (
+                    <span style={{ 
+                      background: darkMode ? '#064e3b' : '#dcfce7', 
+                      color: darkMode ? '#34d399' : '#166534', 
+                      padding: '0.375rem 0.75rem', 
+                      borderRadius: '0.375rem', 
+                      fontSize: '0.813rem',
+                      fontWeight: '600',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.375rem',
+                      border: darkMode ? '1px solid #10b981' : 'none'
+                    }}>
+                      🏠 원격근무
+                    </span>
+                  )}
+                  {selectedJobForDetails.salary_max >= 6000 && (
+                    <span style={{ 
+                      background: darkMode ? '#3730a3' : '#e0e7ff', 
+                      color: darkMode ? '#a5b4fc' : '#4338ca', 
+                      padding: '0.375rem 0.75rem', 
+                      borderRadius: '0.375rem', 
+                      fontSize: '0.813rem',
+                      fontWeight: '600',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.375rem',
+                      border: darkMode ? '1px solid #6366f1' : 'none'
+                    }}>
+                      💰 고연봉
+                    </span>
+                  )}
+                  {selectedJobForDetails.employment_type === 'full-time' && (
+                    <span style={{ 
+                      background: darkMode ? '#7c2d12' : '#fee2e2', 
+                      color: darkMode ? '#fca5a5' : '#dc2626', 
+                      padding: '0.375rem 0.75rem', 
+                      borderRadius: '0.375rem', 
+                      fontSize: '0.813rem',
+                      fontWeight: '600',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.375rem',
+                      border: darkMode ? '1px solid #ef4444' : 'none'
+                    }}>
+                      ⏰ 정규직
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Job details sections */}
+              <div style={{ display: 'grid', gap: '2rem' }}>
+                {/* Job description */}
+                <div>
+                  <h3 style={{
+                    fontSize: '1.125rem',
+                    fontWeight: '600',
+                    color: theme.text,
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    📋 상세 설명
+                  </h3>
+                  <div style={{
+                    background: darkMode ? '#0f172a' : '#f8fafc',
+                    padding: '1.5rem',
+                    borderRadius: '0.75rem',
+                    border: `1px solid ${theme.border}`,
+                    color: theme.textSecondary,
+                    lineHeight: 1.6
+                  }} dangerouslySetInnerHTML={{ __html: highlightKeywords(selectedJobForDetails.description) }} />
+                </div>
+
+                {/* Salary info */}
+                <div>
+                  <h3 style={{
+                    fontSize: '1.125rem',
+                    fontWeight: '600',
+                    color: theme.text,
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    💰 급여 정보
+                  </h3>
+                  <div style={{
+                    background: darkMode ? '#0f172a' : '#f8fafc',
+                    padding: '1.5rem',
+                    borderRadius: '0.75rem',
+                    border: `1px solid ${theme.border}`,
+                    color: theme.text,
+                    fontSize: '1.125rem',
+                    fontWeight: '600'
+                  }}>
+                    {selectedJobForDetails.salary_min && selectedJobForDetails.salary_max 
+                      ? `${selectedJobForDetails.salary_min.toLocaleString()}만 - ${selectedJobForDetails.salary_max.toLocaleString()}만원`
+                      : '급여 협의'}
+                  </div>
+                </div>
+
+                {/* Keywords */}
+                {selectedJobForDetails.keywords && selectedJobForDetails.keywords.length > 0 && (
+                  <div>
+                    <h3 style={{
+                      fontSize: '1.125rem',
+                      fontWeight: '600',
+                      color: theme.text,
+                      marginBottom: '1rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem'
+                    }}>
+                      🏷️ 관련 키워드
+                    </h3>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      {selectedJobForDetails.keywords.map((keyword, index) => (
+                        <span 
+                          key={index}
+                          style={{ 
+                            background: '#667eea', 
+                            color: 'white', 
+                            padding: '0.5rem 1rem', 
+                            borderRadius: '1rem', 
+                            fontSize: '0.875rem', 
+                            fontWeight: '500'
+                          }}
+                        >
+                          {keyword}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Application note */}
+                <div>
+                  <h3 style={{
+                    fontSize: '1.125rem',
+                    fontWeight: '600',
+                    color: theme.text,
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    📝 지원 정보
+                  </h3>
+                  <div style={{
+                    background: '#dcfce7',
+                    color: '#166534',
+                    padding: '1.5rem',
+                    borderRadius: '0.75rem',
+                    border: '1px solid #10b981'
+                  }}>
+                    <div style={{ fontWeight: '600', marginBottom: '0.5rem' }}>
+                      ✅ 지원 완료된 공고입니다
+                    </div>
+                    <div style={{ fontSize: '0.875rem' }}>
+                      지원일: {applicationHistory.find(app => app.jobId === selectedJobForDetails.id)?.appliedAt ? 
+                        new Date(applicationHistory.find(app => app.jobId === selectedJobForDetails.id)!.appliedAt).toLocaleDateString('ko-KR') : 
+                        '정보 없음'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action buttons */}
+              <div style={{
+                display: 'flex',
+                gap: '1rem',
+                justifyContent: 'center',
+                marginTop: '2rem',
+                flexWrap: 'wrap'
+              }}>
+                <button
+                  onClick={() => {
+                    setShowJobDetails(false)
+                    setShowApplicationHistory(true)
+                  }}
+                  style={{
+                    background: '#667eea',
+                    color: 'white',
+                    border: 'none',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '0.5rem',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    fontSize: '0.875rem',
+                    transition: 'background-color 0.2s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}
+                  onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = '#5a67d8'}
+                  onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = '#667eea'}
+                >
+                  <FileText size={16} /> 전체 지원이력 보기
+                </button>
+                
+                <button
+                  onClick={() => {
+                    setShowJobDetails(false)
+                    setSelectedJobForDetails(null)
+                  }}
                   style={{
                     background: 'transparent',
                     color: theme.text,
