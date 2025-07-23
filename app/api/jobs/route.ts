@@ -17,7 +17,20 @@ export async function GET(request: Request) {
     const data = await response.json();
     
     // 데이터 형식 변환
-    const formattedJobs = data.jobs.job.map((job: any) => ({
+    const formattedJobs = data.jobs.job.map((job: {
+      id: string;
+      position: {
+        title: string;
+        location: { name: string };
+        job_type: { name: string };
+        required_education_level?: string;
+      };
+      company: { detail: { name: string } };
+      posting_date: string;
+      expiration_date: string;
+      url: string;
+      salary?: { min?: string; max?: string };
+    }) => ({
       id: job.id,
       title: job.position.title,
       company: job.company.detail.name,
@@ -27,14 +40,14 @@ export async function GET(request: Request) {
       description: job.position.job_type.name,
       url: job.url,
       keywords: job.position.required_education_level ? [job.position.required_education_level] : [],
-      salary_min: parseInt(job.salary?.min || 0),
-      salary_max: parseInt(job.salary?.max || 0),
+      salary_min: parseInt(job.salary?.min || '0'),
+      salary_max: parseInt(job.salary?.max || '0'),
       employment_type: job.position.job_type.name,
       remote_available: false // API에서 제공하지 않으면 별도 파싱 필요
     }));
     
     return NextResponse.json(formattedJobs);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch jobs' }, { status: 500 });
   }
 }
