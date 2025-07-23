@@ -99,6 +99,8 @@ const JobHunter = () => {
   const [showApplicationHistory, setShowApplicationHistory] = useState(false)
   const [showInsights, setShowInsights] = useState(false)
   const [showKeywordSettings, setShowKeywordSettings] = useState(false)
+  const [showApplicationPopup, setShowApplicationPopup] = useState(false)
+  const [currentAppliedJob, setCurrentAppliedJob] = useState<Job | null>(null)
   const jobsPerPage = 3
 
   // 다크모드 테마
@@ -203,7 +205,8 @@ const JobHunter = () => {
       notes: ''
     }
     setApplicationHistory(prev => [...prev, newApplication])
-    window.open(job.url, '_blank')
+    setCurrentAppliedJob(job)
+    setShowApplicationPopup(true)
   }
 
   // 북마크 토글
@@ -574,7 +577,7 @@ const JobHunter = () => {
               type="text" 
               value={newKeyword} 
               onChange={(e) => setNewKeyword(e.target.value)} 
-              onKeyPress={(e) => e.key === 'Enter' && addKeyword()} 
+              onKeyDown={(e) => e.key === 'Enter' && addKeyword()} 
               placeholder="키워드를 입력하세요 (예: Python, Backend)" 
               style={{ 
                 flex: 1, 
@@ -1207,6 +1210,111 @@ const JobHunter = () => {
             >
               다음 <ChevronRight size={16} />
             </button>
+          </div>
+        )}
+
+        {/* Application Success Popup */}
+        {showApplicationPopup && currentAppliedJob && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000
+          }}>
+            <div style={{
+              background: theme.cardBg,
+              borderRadius: '1rem',
+              padding: '2rem',
+              maxWidth: '400px',
+              width: '90%',
+              textAlign: 'center',
+              border: `1px solid ${theme.border}`,
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'
+            }}>
+              <div style={{
+                fontSize: '3rem',
+                marginBottom: '1rem'
+              }}>✅</div>
+              
+              <h3 style={{
+                fontSize: '1.5rem',
+                fontWeight: '600',
+                color: theme.text,
+                marginBottom: '0.5rem'
+              }}>
+                지원이 완료되었습니다!
+              </h3>
+              
+              <p style={{
+                color: theme.textSecondary,
+                marginBottom: '1.5rem',
+                fontSize: '0.875rem'
+              }}>
+                &ldquo;{currentAppliedJob.title}&rdquo; 공고에<br/>
+                성공적으로 지원되었습니다.
+              </p>
+              
+              <div style={{
+                display: 'flex',
+                gap: '0.75rem',
+                justifyContent: 'center',
+                flexWrap: 'wrap'
+              }}>
+                <button
+                  onClick={() => {
+                    setShowApplicationPopup(false)
+                    setShowApplicationHistory(true)
+                  }}
+                  style={{
+                    background: '#667eea',
+                    color: 'white',
+                    border: 'none',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '0.5rem',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    fontSize: '0.875rem',
+                    transition: 'background-color 0.2s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}
+                  onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = '#5a67d8'}
+                  onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = '#667eea'}
+                >
+                  <FileText size={16} /> 지원한 공고 확인
+                </button>
+                
+                <button
+                  onClick={() => setShowApplicationPopup(false)}
+                  style={{
+                    background: 'transparent',
+                    color: theme.text,
+                    border: `1px solid ${theme.border}`,
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '0.5rem',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    fontSize: '0.875rem',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseOver={(e) => {
+                    (e.target as HTMLElement).style.backgroundColor = theme.border
+                  }}
+                  onMouseOut={(e) => {
+                    (e.target as HTMLElement).style.backgroundColor = 'transparent'
+                  }}
+                >
+                  닫기
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
