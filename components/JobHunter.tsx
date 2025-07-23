@@ -834,31 +834,54 @@ const JobHunter = () => {
                     </div>
                   )}
 
-                  <div style={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'flex-start', 
-                    marginBottom: '1rem', 
-                    flexWrap: 'wrap', 
-                    gap: '1rem' 
+                  {/* Mobile-first layout restructure */}
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                    marginBottom: '1rem'
                   }}>
-                    <div style={{ flex: 1 }}>
+                    {/* Match percentage badge - moved to top for mobile */}
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      gap: '1rem'
+                    }}>
                       <h3 style={{ 
-                        fontSize: window.innerWidth < 640 ? '1.125rem' : '1.25rem', 
+                        fontSize: '1.125rem',
                         fontWeight: '600', 
-                        marginBottom: '0.5rem', 
-                        paddingRight: window.innerWidth < 640 ? '3rem' : '5rem',
+                        marginBottom: '0.5rem',
                         color: theme.text,
-                        lineHeight: 1.3,
+                        lineHeight: 1.4,
                         wordBreak: 'keep-all',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'
+                        flex: 1,
+                        minWidth: 0
                       }} 
                       dangerouslySetInnerHTML={{ __html: highlightKeywords(job.title) }} 
                       />
+                      
+                      <div style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '0.5rem', 
+                        background: job.matchScore >= 75 ? '#dcfce7' : 
+                                   job.matchScore >= 50 ? '#fef3c7' : 
+                                   job.matchScore >= 25 ? '#fed7aa' : '#f1f5f9',
+                        color: job.matchScore >= 75 ? '#166534' : 
+                               job.matchScore >= 50 ? '#92400e' : 
+                               job.matchScore >= 25 ? '#c2410c' : '#64748b',
+                        padding: '0.5rem 0.75rem', 
+                        borderRadius: '1.5rem', 
+                        fontSize: '0.75rem', 
+                        fontWeight: '600',
+                        flexShrink: 0
+                      }}>
+                        <Percent size={12} /> {job.matchScore}%
+                      </div>
+                    </div>
+                    
+                    <div>
                       
                       {/* 메리트 칩들을 헤더 바로 아래로 이동 */}
                       <div style={{
@@ -950,24 +973,6 @@ const JobHunter = () => {
                           ? `${job.salary_min.toLocaleString()}만 - ${job.salary_max.toLocaleString()}만원`
                           : '협의'}
                       </div>
-                    </div>
-
-                    <div style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: '0.5rem', 
-                      background: job.matchScore >= 75 ? '#dcfce7' : 
-                                 job.matchScore >= 50 ? '#fef3c7' : 
-                                 job.matchScore >= 25 ? '#fed7aa' : '#f1f5f9',
-                      color: job.matchScore >= 75 ? '#166534' : 
-                             job.matchScore >= 50 ? '#92400e' : 
-                             job.matchScore >= 25 ? '#c2410c' : '#64748b',
-                      padding: '0.5rem 1rem', 
-                      borderRadius: '1.5rem', 
-                      fontSize: '0.875rem', 
-                      fontWeight: '600' 
-                    }}>
-                      <Percent size={14} /> {job.matchScore}%
                     </div>
                   </div>
 
