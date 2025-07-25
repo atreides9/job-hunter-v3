@@ -1102,6 +1102,7 @@ const JobHunter = () => {
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                       <button
                         onClick={(e) => {
+                          e.preventDefault()
                           e.stopPropagation()
                           applyToJob(job)
                         }}
