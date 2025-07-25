@@ -60,7 +60,7 @@ const ApplicationsPage: React.FC = () => {
       filtered = filtered.filter(app => 
         app && app.job && (
           app.job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          app.job.company.toLowerCase().includes(searchQuery.toLowerCase())
+          app.job.company.name.toLowerCase().includes(searchQuery.toLowerCase())
         )
       )
     }
@@ -75,7 +75,7 @@ const ApplicationsPage: React.FC = () => {
       if (!a || !b) return 0
       switch (sortBy) {
         case 'company':
-          return a.job.company.localeCompare(b.job.company)
+          return a.job.company.name.localeCompare(b.job.company.name)
         case 'title':
           return a.job.title.localeCompare(b.job.title)
         case 'deadline':
@@ -405,7 +405,7 @@ const ApplicationsPage: React.FC = () => {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <Building size={16} color={theme.textSecondary} />
                           <span style={{ color: theme.text, fontWeight: '500' }}>
-                            {app.job.company}
+                            {app.job.company.name}
                           </span>
                         </div>
                       </td>

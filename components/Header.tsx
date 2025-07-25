@@ -4,14 +4,13 @@ import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAppContext } from '@/contexts/AppContext'
-import { Moon, Sun, BarChart, FileText, Bookmark, User } from 'lucide-react'
+import { Moon, Sun, BarChart, Bookmark, User } from 'lucide-react'
 
 const Header: React.FC = () => {
   const pathname = usePathname()
   const { darkMode, setDarkMode, applicationHistory, bookmarkedJobs } = useAppContext()
 
   const navItems = [
-    { path: '/', label: '채용공고', icon: FileText },
     { path: '/bookmark', label: '북마크', icon: Bookmark, count: bookmarkedJobs.length },
     { path: '/resume', label: '이력서관리', icon: User },
     { path: '/applications', label: '지원현황', icon: BarChart, count: applicationHistory.length },

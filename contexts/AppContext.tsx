@@ -3,10 +3,20 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 
 // Type definitions
+interface CompanyInfo {
+  name: string;
+  employeeCount: string;
+  industry: string;
+  founded: string;
+  location: string;
+  website: string;
+  description: string;
+}
+
 interface Job {
   id: number;
   title: string;
-  company: string;
+  company: CompanyInfo;
   location: string;
   posted_date: string;
   deadline: string;
@@ -17,6 +27,8 @@ interface Job {
   salary_max: number;
   employment_type: string;
   remote_available: boolean;
+  requirements?: string[];
+  benefits?: string[];
 }
 
 interface ApplicationHistory {

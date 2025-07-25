@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react'
 import { useAppContext } from '@/contexts/AppContext'
+import { useRouter } from 'next/navigation'
 import Layout from './Layout'
 import { Search, Filter, Bell, Calendar, MapPin, Building, Percent, ChevronLeft, ChevronRight, Loader2, Plus, X, BellRing, BellOff, FileText, Clock, TrendingUp, Bookmark, BookmarkCheck, AlertTriangle, BarChart } from 'lucide-react'
 
@@ -10,7 +11,15 @@ const mockJobsData = [
   {
     id: 1,
     title: "Frontend Developer - React/Next.js",
-    company: "TechCorp Inc.",
+    company: {
+      name: "TechCorp Inc.",
+      employeeCount: "100-500명",
+      industry: "IT 서비스",
+      founded: "2015년",
+      location: "서울시 강남구",
+      website: "https://techcorp.com",
+      description: "혁신적인 기술 솔루션을 제공하는 IT 기업으로, 글로벌 시장에서 인정받는 소프트웨어 개발 회사입니다."
+    },
     location: "Seoul, South Korea",
     posted_date: "2024-07-13",
     deadline: "2024-07-16",
@@ -20,12 +29,34 @@ const mockJobsData = [
     salary_min: 4000,
     salary_max: 6000,
     employment_type: "full-time",
-    remote_available: true
+    remote_available: true,
+    requirements: [
+      "React, Next.js 3년 이상 실무 경험",
+      "TypeScript 활용 능력",
+      "반응형 웹 개발 경험",
+      "Git을 이용한 협업 경험",
+      "RESTful API 연동 경험"
+    ],
+    benefits: [
+      "유연근무제",
+      "연봉 상한선 없음",
+      "교육비 지원",
+      "건강검진비 지원",
+      "점심 제공"
+    ]
   },
   {
     id: 2,
     title: "UX Designer - Product Design",
-    company: "DesignStudio Co.",
+    company: {
+      name: "DesignStudio Co.",
+      employeeCount: "50-100명",
+      industry: "디자인 에이전시",
+      founded: "2018년",
+      location: "부산시 해운대구",
+      website: "https://designstudio.co.kr",
+      description: "사용자 중심의 디자인으로 브랜드 가치를 높이는 전문 디자인 스튜디오입니다."
+    },
     location: "Busan, South Korea",
     posted_date: "2024-07-12",
     deadline: "2024-07-15",
@@ -35,12 +66,34 @@ const mockJobsData = [
     salary_min: 3500,
     salary_max: 5500,
     employment_type: "full-time",
-    remote_available: false
+    remote_available: false,
+    requirements: [
+      "UX/UI 디자인 2년 이상 경험",
+      "Figma, Sketch 숙련도",
+      "사용자 리서치 경험",
+      "프로토타이핑 능력",
+      "디자인 시스템 구축 경험"
+    ],
+    benefits: [
+      "크리에이티브 환경",
+      "디자인 도구 지원",
+      "포트폴리오 제작 지원",
+      "컨퍼런스 참가비 지원",
+      "자유로운 복장"
+    ]
   },
   {
     id: 3,
     title: "Full Stack Developer - Node.js & React",
-    company: "StartupHub",
+    company: {
+      name: "StartupHub",
+      employeeCount: "10-50명",
+      industry: "핀테크",
+      founded: "2020년",
+      location: "원격근무",
+      website: "https://startuphub.io",
+      description: "차세대 금융 서비스를 개발하는 혁신적인 핀테크 스타트업입니다."
+    },
     location: "Remote",
     posted_date: "2024-07-11",
     deadline: "2024-07-20",
@@ -50,7 +103,21 @@ const mockJobsData = [
     salary_min: 4500,
     salary_max: 7000,
     employment_type: "full-time",
-    remote_available: true
+    remote_available: true,
+    requirements: [
+      "Node.js, React 개발 경험 3년 이상",
+      "MongoDB, PostgreSQL 사용 경험",
+      "AWS 클라우드 서비스 경험",
+      "Docker, Kubernetes 이해",
+      "금융 도메인 이해 우대"
+    ],
+    benefits: [
+      "완전 원격근무",
+      "스톡옵션 제공",
+      "최신 장비 지원",
+      "자기계발비 지원",
+      "자율출퇴근"
+    ]
   }
 ]
 
@@ -64,10 +131,10 @@ const JobHunter = () => {
     toggleBookmark,
     applicationHistory,
     addApplication,
-    jobNotes,
-    updateJobNote,
     darkMode
   } = useAppContext()
+
+  const router = useRouter()
 
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
@@ -193,12 +260,6 @@ const JobHunter = () => {
     setShowApplicationPopup(true)
   }
 
-  // 메모 저장
-  const saveJobNote = (jobId: number) => {
-    const note = jobNotes[jobId] || ''
-    console.log(`Job ${jobId} 메모 저장됨:`, note)
-    alert('메모가 저장되었습니다!')
-  }
 
   // 하이라이팅
   const highlightKeywords = (text: string) => {
@@ -343,7 +404,7 @@ const JobHunter = () => {
                         fontSize: '0.875rem', 
                         color: theme.textSecondary 
                       }}>
-                        {job.company} • 지원일: {new Date(app.appliedAt).toLocaleDateString('ko-KR')}
+                        {job.company.name} • 지원일: {new Date(app.appliedAt).toLocaleDateString('ko-KR')}
                       </p>
                     </div>
                   )
@@ -691,44 +752,72 @@ const JobHunter = () => {
                     e.currentTarget.style.transform = 'translateY(0)'
                     e.currentTarget.style.boxShadow = cardStyle.boxShadow
                   }}
+                  onClick={() => router.push(`/jobs/${job.id}`)}
                 >
-                  {/* 마감 임박 배지 */}
-                  {daysUntilDeadline !== null && daysUntilDeadline <= 3 && daysUntilDeadline >= 0 && (
+                  {/* Badge Container - Fixed positioning to prevent overlaps */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    right: '1rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.5rem',
+                    alignItems: 'flex-end',
+                    zIndex: 2
+                  }}>
+                    {/* 마감 임박 배지 */}
+                    {daysUntilDeadline !== null && daysUntilDeadline <= 3 && daysUntilDeadline >= 0 && (
+                      <div style={{ 
+                        background: '#ef4444', 
+                        color: 'white', 
+                        padding: '0.25rem 0.75rem', 
+                        borderRadius: '1rem', 
+                        fontSize: '0.75rem', 
+                        fontWeight: '600', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '0.25rem',
+                        whiteSpace: 'nowrap'
+                      }}>
+                        <Clock size={12} /> D-{daysUntilDeadline}
+                      </div>
+                    )}
+
+                    {/* 높은 매칭률 배지 */}
+                    {job.matchScore >= 70 && (
+                      <div style={{ 
+                        background: '#10b981', 
+                        color: 'white', 
+                        padding: '0.25rem 0.75rem', 
+                        borderRadius: '1rem', 
+                        fontSize: '0.75rem', 
+                        fontWeight: '600',
+                        whiteSpace: 'nowrap'
+                      }}>
+                        ⭐ 높은 매칭률
+                      </div>
+                    )}
+
+                    {/* 매칭률 퍼센트 배지 - moved here to prevent overlap */}
                     <div style={{ 
-                      position: 'absolute', 
-                      top: '1rem', 
-                      right: '1rem', 
-                      background: '#ef4444', 
-                      color: 'white', 
-                      padding: '0.25rem 0.75rem', 
-                      borderRadius: '1rem', 
-                      fontSize: '0.75rem', 
-                      fontWeight: '600', 
                       display: 'flex', 
                       alignItems: 'center', 
-                      gap: '0.25rem',
-                      zIndex: 1
-                    }}>
-                      <Clock size={12} /> D-{daysUntilDeadline}
-                    </div>
-                  )}
-
-                  {/* 높은 매칭률 배지 */}
-                  {job.matchScore >= 70 && (
-                    <div style={{ 
-                      position: 'absolute', 
-                      top: daysUntilDeadline !== null && daysUntilDeadline <= 3 ? '3rem' : '1rem',
-                      right: '1rem', 
-                      background: '#10b981', 
-                      color: 'white', 
-                      padding: '0.25rem 0.75rem', 
-                      borderRadius: '1rem', 
+                      gap: '0.5rem', 
+                      background: job.matchScore >= 75 ? '#dcfce7' : 
+                                 job.matchScore >= 50 ? '#fef3c7' : 
+                                 job.matchScore >= 25 ? '#fed7aa' : '#f1f5f9',
+                      color: job.matchScore >= 75 ? '#166534' : 
+                             job.matchScore >= 50 ? '#92400e' : 
+                             job.matchScore >= 25 ? '#c2410c' : '#64748b',
+                      padding: '0.5rem 0.75rem', 
+                      borderRadius: '1.5rem', 
                       fontSize: '0.75rem', 
-                      fontWeight: '600'
+                      fontWeight: '600',
+                      whiteSpace: 'nowrap'
                     }}>
-                      ⭐ 높은 매칭률
+                      <Percent size={12} /> {job.matchScore}%
                     </div>
-                  )}
+                  </div>
 
                   <div style={{
                     display: 'flex',
@@ -742,7 +831,7 @@ const JobHunter = () => {
                       alignItems: 'flex-start',
                       gap: '1rem'
                     }}>
-                      {/* Fixed: Remove ellipsis and display full title */}
+                      {/* Job title - full display without ellipsis */}
                       <h3 style={{ 
                         fontSize: '1.125rem',
                         fontWeight: '600', 
@@ -752,35 +841,13 @@ const JobHunter = () => {
                         wordBreak: 'keep-all',
                         flex: 1,
                         minWidth: 0,
-                        // Remove any text overflow properties
                         overflow: 'visible',
                         textOverflow: 'initial',
-                        whiteSpace: 'normal'
+                        whiteSpace: 'normal',
+                        paddingRight: '8rem' // Add padding to avoid overlap with badges
                       }} 
                       dangerouslySetInnerHTML={{ __html: highlightKeywords(job.title) }} 
                       />
-                      
-                      {/* Fixed: Better positioning for percentage badge */}
-                      <div style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '0.5rem', 
-                        background: job.matchScore >= 75 ? '#dcfce7' : 
-                                   job.matchScore >= 50 ? '#fef3c7' : 
-                                   job.matchScore >= 25 ? '#fed7aa' : '#f1f5f9',
-                        color: job.matchScore >= 75 ? '#166534' : 
-                               job.matchScore >= 50 ? '#92400e' : 
-                               job.matchScore >= 25 ? '#c2410c' : '#64748b',
-                        padding: '0.5rem 0.75rem', 
-                        borderRadius: '1.5rem', 
-                        fontSize: '0.75rem', 
-                        fontWeight: '600',
-                        flexShrink: 0,
-                        alignSelf: 'flex-start', // Prevents stretching
-                        marginTop: '0.25rem' // Small offset for better alignment
-                      }}>
-                        <Percent size={12} /> {job.matchScore}%
-                      </div>
                     </div>
                     
                     <div>
@@ -849,7 +916,7 @@ const JobHunter = () => {
                         flexWrap: 'wrap' 
                       }}>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                          <Building size={14} /> {job.company}
+                          <Building size={14} /> {job.company.name}
                         </span>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                           <MapPin size={14} /> {job.location}
@@ -926,60 +993,6 @@ const JobHunter = () => {
                     </div>
                   )}
 
-                  {/* 메모 입력 */}
-                  <div style={{ marginBottom: '1rem' }}>
-                    <div style={{
-                      display: 'flex',
-                      gap: '0.75rem',
-                      alignItems: 'flex-start'
-                    }}>
-                      <textarea
-                        placeholder="💭 이 공고에 대한 메모를 추가하세요... (예: 포트폴리오 준비, 면접 질문 등)"
-                        value={jobNotes[job.id] || ''}
-                        onChange={(e) => updateJobNote(job.id, e.target.value)}
-                        onClick={(e) => e.stopPropagation()}
-                        style={{
-                          flex: 1,
-                          minHeight: '3rem',
-                          padding: '0.75rem',
-                          border: `1px solid ${theme.border}`,
-                          borderRadius: '0.5rem',
-                          fontSize: '0.875rem',
-                          background: darkMode ? '#0f172a' : '#f8fafc',
-                          color: theme.text,
-                          resize: 'vertical',
-                          fontFamily: 'inherit',
-                          outline: 'none',
-                          transition: 'border-color 0.2s ease'
-                        }}
-                        onFocus={(e) => e.target.style.borderColor = '#667eea'}
-                        onBlur={(e) => e.target.style.borderColor = theme.border}
-                      />
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          saveJobNote(job.id)
-                        }}
-                        style={{
-                          background: '#10b981',
-                          color: 'white',
-                          border: 'none',
-                          padding: '0.75rem 1rem',
-                          borderRadius: '0.5rem',
-                          cursor: 'pointer',
-                          fontWeight: '500',
-                          fontSize: '0.875rem',
-                          transition: 'background-color 0.2s ease',
-                          flexShrink: 0,
-                          height: 'fit-content'
-                        }}
-                        onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = '#059669'}
-                        onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = '#10b981'}
-                      >
-                        저장하기
-                      </button>
-                    </div>
-                  </div>
 
                   <div style={{ 
                     display: 'flex', 

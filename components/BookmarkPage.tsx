@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react'
 import { useAppContext } from '@/contexts/AppContext'
 import Layout from './Layout'
-import { Building, MapPin, Calendar, Clock, Percent, Bookmark, FileText, Trash2 } from 'lucide-react'
+import { Building, MapPin, Calendar, Clock, Percent, Bookmark, FileText, Trash2, CheckCircle, CircleDot } from 'lucide-react'
 
 const BookmarkPage: React.FC = () => {
   const { 
@@ -17,6 +17,7 @@ const BookmarkPage: React.FC = () => {
   } = useAppContext()
   
   const [sortBy, setSortBy] = useState('posted_date')
+  const [filterStatus, setFilterStatus] = useState('all')
 
   const theme = {
     bg: darkMode ? '#0f172a' : '#f8fafc',
@@ -26,11 +27,11 @@ const BookmarkPage: React.FC = () => {
     border: darkMode ? '#334155' : '#e2e8f0'
   }
 
-  // Get bookmarked jobs with match scores
+  // Get bookmarked jobs with match scores and application status
   const bookmarkedJobsData = useMemo(() => {
     const bookmarked = jobs.filter(job => bookmarkedJobs.includes(job.id))
     
-    return bookmarked.map(job => {
+    const processedJobs = bookmarked.map(job => {
       const allText = `${job.title} ${job.description} ${job.keywords.join(' ')}`.toLowerCase()
       const matchedKeywords = userKeywords.filter(keyword => 
         allText.includes(keyword.toLowerCase())
@@ -38,8 +39,18 @@ const BookmarkPage: React.FC = () => {
       const matchScore = userKeywords.length > 0 ? 
         Math.round((matchedKeywords.length / userKeywords.length) * 100) : 0
       
-      return { ...job, matchedKeywords, matchScore }
-    }).sort((a, b) => {
+      const hasApplied = applicationHistory.some(app => app.jobId === job.id)
+      const applicationStatus = hasApplied ? 'applied' : 'pending'
+      
+      return { ...job, matchedKeywords, matchScore, applicationStatus, hasApplied }
+    })
+
+    // Filter by status
+    const filteredJobs = filterStatus === 'all' ? processedJobs : 
+                        processedJobs.filter(job => job.applicationStatus === filterStatus)
+
+    // Sort the filtered jobs
+    return filteredJobs.sort((a, b) => {
       switch (sortBy) {
         case 'matchScore': 
           return b.matchScore - a.matchScore
@@ -49,14 +60,27 @@ const BookmarkPage: React.FC = () => {
           if (!b.deadline) return -1
           return new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
         case 'company':
-          return a.company.localeCompare(b.company)
+          return a.company.name.localeCompare(b.company.name)
         default: 
           return new Date(b.posted_date).getTime() - new Date(a.posted_date).getTime()
       }
     })
-  }, [jobs, bookmarkedJobs, userKeywords, sortBy])
+  }, [jobs, bookmarkedJobs, userKeywords, sortBy, filterStatus, applicationHistory])
 
-  const applyToJob = (job: { id: number; title: string; company: string }) => {
+  // Get statistics for different categories
+  const bookmarkStats = useMemo(() => {
+    const allBookmarked = jobs.filter(job => bookmarkedJobs.includes(job.id))
+    const applied = allBookmarked.filter(job => applicationHistory.some(app => app.jobId === job.id))
+    const pending = allBookmarked.filter(job => !applicationHistory.some(app => app.jobId === job.id))
+    
+    return {
+      total: allBookmarked.length,
+      applied: applied.length,
+      pending: pending.length
+    }
+  }, [jobs, bookmarkedJobs, applicationHistory])
+
+  const applyToJob = (job: { id: number; title: string; company: { name: string } }) => {
     const newApplication = {
       jobId: job.id,
       appliedAt: new Date().toISOString(),
@@ -103,14 +127,51 @@ const BookmarkPage: React.FC = () => {
           </h1>
           <p style={{
             color: theme.textSecondary,
-            fontSize: '1.125rem'
+            fontSize: '1.125rem',
+            marginBottom: '1rem'
           }}>
-            관심있는 {bookmarkedJobsData.length}개의 채용공고를 한눈에 확인하세요
+            관심있는 {bookmarkStats.total}개의 채용공고를 한눈에 확인하세요
           </p>
+          
+          {/* Status Statistics */}
+          <div style={{
+            display: 'flex',
+            gap: '1rem',
+            flexWrap: 'wrap'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              background: darkMode ? '#0f172a' : '#f8fafc',
+              padding: '0.5rem 1rem',
+              borderRadius: '0.5rem',
+              border: `1px solid ${theme.border}`
+            }}>
+              <CheckCircle size={16} color="#10b981" />
+              <span style={{ color: theme.text, fontSize: '0.875rem' }}>
+                지원완료: <strong>{bookmarkStats.applied}개</strong>
+              </span>
+            </div>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              background: darkMode ? '#0f172a' : '#f8fafc',
+              padding: '0.5rem 1rem',
+              borderRadius: '0.5rem',
+              border: `1px solid ${theme.border}`
+            }}>
+              <CircleDot size={16} color="#f59e0b" />
+              <span style={{ color: theme.text, fontSize: '0.875rem' }}>
+                대기중: <strong>{bookmarkStats.pending}개</strong>
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Controls */}
-        {bookmarkedJobsData.length > 0 && (
+        {bookmarkStats.total > 0 && (
           <div style={{
             background: theme.cardBg,
             padding: '1rem 1.5rem',
@@ -124,32 +185,58 @@ const BookmarkPage: React.FC = () => {
             border: `1px solid ${theme.border}`,
             boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.875rem', fontWeight: '500', color: theme.text }}>정렬:</label>
-              <select 
-                value={sortBy} 
-                onChange={(e) => setSortBy(e.target.value)} 
-                style={{ 
-                  padding: '0.5rem', 
-                  border: `1px solid ${theme.border}`, 
-                  borderRadius: '0.25rem', 
-                  background: theme.cardBg, 
-                  color: theme.text,
-                  fontSize: '0.875rem'
-                }}
-              >
-                <option value="posted_date">최신 등록순</option>
-                <option value="matchScore">일치율 높은 순</option>
-                <option value="deadline">마감 임박순</option>
-                <option value="company">회사명순</option>
-              </select>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+              {/* Status Filter */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <label style={{ fontSize: '0.875rem', fontWeight: '500', color: theme.text }}>상태:</label>
+                <select 
+                  value={filterStatus} 
+                  onChange={(e) => setFilterStatus(e.target.value)} 
+                  style={{ 
+                    padding: '0.5rem', 
+                    border: `1px solid ${theme.border}`, 
+                    borderRadius: '0.25rem', 
+                    background: theme.cardBg, 
+                    color: theme.text,
+                    fontSize: '0.875rem'
+                  }}
+                >
+                  <option value="all">전체</option>
+                  <option value="applied">지원완료</option>
+                  <option value="pending">대기중</option>
+                </select>
+              </div>
+
+              {/* Sort */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <label style={{ fontSize: '0.875rem', fontWeight: '500', color: theme.text }}>정렬:</label>
+                <select 
+                  value={sortBy} 
+                  onChange={(e) => setSortBy(e.target.value)} 
+                  style={{ 
+                    padding: '0.5rem', 
+                    border: `1px solid ${theme.border}`, 
+                    borderRadius: '0.25rem', 
+                    background: theme.cardBg, 
+                    color: theme.text,
+                    fontSize: '0.875rem'
+                  }}
+                >
+                  <option value="posted_date">최신 등록순</option>
+                  <option value="matchScore">일치율 높은 순</option>
+                  <option value="deadline">마감 임박순</option>
+                  <option value="company">회사명순</option>
+                </select>
+              </div>
             </div>
             
             <div style={{ 
               fontSize: '0.875rem', 
               color: theme.textSecondary 
             }}>
-              총 {bookmarkedJobsData.length}개의 북마크된 공고
+              {filterStatus === 'all' ? `총 ${bookmarkStats.total}개` : 
+               filterStatus === 'applied' ? `지원완료 ${bookmarkStats.applied}개` :
+               `대기중 ${bookmarkStats.pending}개`}의 북마크된 공고
             </div>
           </div>
         )}
@@ -170,13 +257,17 @@ const BookmarkPage: React.FC = () => {
               color: theme.text, 
               marginBottom: '1rem' 
             }}>
-              북마크한 공고가 없습니다
+              {filterStatus === 'all' ? '북마크한 공고가 없습니다' :
+               filterStatus === 'applied' ? '지원완료된 북마크 공고가 없습니다' :
+               '대기중인 북마크 공고가 없습니다'}
             </h3>
             <p style={{ 
               color: theme.textSecondary,
               fontSize: '1.125rem'
             }}>
-              채용공고 페이지에서 관심있는 공고를 북마크해보세요!
+              {filterStatus === 'all' ? '채용공고 페이지에서 관심있는 공고를 북마크해보세요!' :
+               filterStatus === 'applied' ? '아직 지원하지 않은 북마크 공고가 있는지 확인해보세요.' :
+               '북마크한 공고 중 지원할 공고를 찾아보세요!'}
             </p>
           </div>
         ) : (
@@ -226,7 +317,7 @@ const BookmarkPage: React.FC = () => {
                         flexWrap: 'wrap' 
                       }}>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                          <Building size={14} /> {job.company}
+                          <Building size={14} /> {job.company.name}
                         </span>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                           <MapPin size={14} /> {job.location}
@@ -252,21 +343,45 @@ const BookmarkPage: React.FC = () => {
                     
                     <div style={{ 
                       display: 'flex', 
-                      alignItems: 'center', 
-                      gap: '0.5rem', 
-                      background: job.matchScore >= 75 ? '#dcfce7' : 
-                                 job.matchScore >= 50 ? '#fef3c7' : 
-                                 job.matchScore >= 25 ? '#fed7aa' : '#f1f5f9',
-                      color: job.matchScore >= 75 ? '#166534' : 
-                             job.matchScore >= 50 ? '#92400e' : 
-                             job.matchScore >= 25 ? '#c2410c' : '#64748b',
-                      padding: '0.5rem 0.75rem', 
-                      borderRadius: '1.5rem', 
-                      fontSize: '0.75rem', 
-                      fontWeight: '600',
+                      flexDirection: 'column',
+                      alignItems: 'flex-end',
+                      gap: '0.5rem',
                       flexShrink: 0
                     }}>
-                      <Percent size={12} /> {job.matchScore}%
+                      {/* Application Status Badge */}
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.25rem',
+                        background: job.hasApplied ? '#dcfce7' : '#fef3c7',
+                        color: job.hasApplied ? '#166534' : '#92400e',
+                        padding: '0.25rem 0.5rem',
+                        borderRadius: '1rem',
+                        fontSize: '0.75rem',
+                        fontWeight: '600'
+                      }}>
+                        {job.hasApplied ? <CheckCircle size={10} /> : <CircleDot size={10} />}
+                        {job.hasApplied ? '지원완료' : '대기중'}
+                      </div>
+                      
+                      {/* Match Score Badge */}
+                      <div style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '0.5rem', 
+                        background: job.matchScore >= 75 ? '#dcfce7' : 
+                                   job.matchScore >= 50 ? '#fef3c7' : 
+                                   job.matchScore >= 25 ? '#fed7aa' : '#f1f5f9',
+                        color: job.matchScore >= 75 ? '#166534' : 
+                               job.matchScore >= 50 ? '#92400e' : 
+                               job.matchScore >= 25 ? '#c2410c' : '#64748b',
+                        padding: '0.5rem 0.75rem', 
+                        borderRadius: '1.5rem', 
+                        fontSize: '0.75rem', 
+                        fontWeight: '600'
+                      }}>
+                        <Percent size={12} /> {job.matchScore}%
+                      </div>
                     </div>
                   </div>
 
