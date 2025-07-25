@@ -1,33 +1,9 @@
 'use client'
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { Search, Filter, Bell, Calendar, MapPin, Building, Percent, ChevronLeft, ChevronRight, Loader2, Plus, X, Moon, Sun, BellRing, BellOff, FileText, Clock, TrendingUp, Bookmark, BookmarkCheck, AlertTriangle, BarChart } from 'lucide-react'
-
-
-// Type definitions for the JobHunter component
-interface Job {
-  id: number;
-  title: string;
-  company: string;
-  location: string;
-  posted_date: string;
-  deadline: string;
-  description: string;
-  url: string;
-  keywords: string[];
-  salary_min: number;
-  salary_max: number;
-  employment_type: string;
-  remote_available: boolean;
-}
-
-interface ApplicationHistory {
-  jobId: number;
-  appliedAt: string;
-  status: string;
-  notes: string;
-}
-
+import { useAppContext } from '@/contexts/AppContext'
+import Layout from './Layout'
+import { Search, Filter, Bell, Calendar, MapPin, Building, Percent, ChevronLeft, ChevronRight, Loader2, Plus, X, BellRing, BellOff, FileText, Clock, TrendingUp, Bookmark, BookmarkCheck, AlertTriangle, BarChart } from 'lucide-react'
 
 // Mock 데이터
 const mockJobsData = [
@@ -79,11 +55,22 @@ const mockJobsData = [
 ]
 
 const JobHunter = () => {
-  //const [jobs, setJobs] = useState([])
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const {
+    jobs,
+    setJobs,
+    userKeywords,
+    setUserKeywords,
+    bookmarkedJobs,
+    toggleBookmark,
+    applicationHistory,
+    addApplication,
+    jobNotes,
+    updateJobNote,
+    darkMode
+  } = useAppContext()
+
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
-  const [userKeywords, setUserKeywords] = useState(['React', 'UX Designer'])
   const [keywordNotifications, setKeywordNotifications] = useState([
     { keyword: 'React', frequency: 'daily' },
     { keyword: 'UX Designer', frequency: 'weekly' }
@@ -92,20 +79,15 @@ const JobHunter = () => {
   const [sortBy, setSortBy] = useState('posted_date')
   const [filterScore, setFilterScore] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
-  const [darkMode, setDarkMode] = useState(false)
-  const [applicationHistory, setApplicationHistory] = useState<ApplicationHistory[]>([])
-  const [bookmarkedJobs, setBookmarkedJobs] = useState<number[]>([])
-  const [jobNotes, setJobNotes] = useState<{[key: number]: string}>({})
   const [showApplicationHistory, setShowApplicationHistory] = useState(false)
   const [showInsights, setShowInsights] = useState(false)
   const [showKeywordSettings, setShowKeywordSettings] = useState(false)
   const [showApplicationPopup, setShowApplicationPopup] = useState(false)
-  const [currentAppliedJob, setCurrentAppliedJob] = useState<Job | null>(null)
+  const [currentAppliedJob, setCurrentAppliedJob] = useState<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
   const [showJobDetails, setShowJobDetails] = useState(false)
-  const [selectedJobForDetails, setSelectedJobForDetails] = useState<Job | null>(null)
+  const [selectedJobForDetails, setSelectedJobForDetails] = useState<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
   const jobsPerPage = 3
 
-  // 다크모드 테마
   const theme = {
     bg: darkMode ? '#0f172a' : '#f8fafc',
     cardBg: darkMode ? '#1e293b' : 'white',
@@ -127,7 +109,7 @@ const JobHunter = () => {
         setLoading(false)
       }, 800)
     }
-  }, [mounted])
+  }, [mounted, setJobs])
 
   // 키워드 매칭 계산
   const processedJobs = useMemo(() => {
@@ -199,38 +181,22 @@ const JobHunter = () => {
   }
 
   // 지원하기
-  const applyToJob = (job: Job) => {
+  const applyToJob = (job: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const newApplication = {
       jobId: job.id,
       appliedAt: new Date().toISOString(),
       status: 'applied',
       notes: ''
     }
-    setApplicationHistory(prev => [...prev, newApplication])
+    addApplication(newApplication)
     setCurrentAppliedJob(job)
     setShowApplicationPopup(true)
   }
 
-  // 북마크 토글
-  const toggleBookmark = (jobId: number) => {
-    setBookmarkedJobs(prev => 
-      prev.includes(jobId) 
-        ? prev.filter(id => id !== jobId)
-        : [...prev, jobId]
-    )
-  }
-
-  // 메모 업데이트
-  const updateJobNote = (jobId: number, note: string) => {
-    setJobNotes(prev => ({ ...prev, [jobId]: note }))
-  }
-
   // 메모 저장
   const saveJobNote = (jobId: number) => {
-    // 현재는 로컬 상태에만 저장되지만, 향후 서버나 로컬스토리지에 저장 가능
     const note = jobNotes[jobId] || ''
     console.log(`Job ${jobId} 메모 저장됨:`, note)
-    // 저장 완료 표시를 위한 간단한 피드백
     alert('메모가 저장되었습니다!')
   }
 
@@ -282,106 +248,7 @@ const JobHunter = () => {
   }
 
   return (
-    <div style={{ 
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
-      backgroundColor: theme.bg, 
-      minHeight: '100vh', 
-      color: theme.text,
-      transition: 'all 0.3s ease'
-    }}>
-      {/* Header */}
-      <header style={{
-        background: darkMode 
-          ? 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' 
-          : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white', 
-        padding: '1.5rem 0', 
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-      }}>
-        <div style={{ 
-          maxWidth: '1200px', 
-          margin: '0 auto', 
-          padding: '0 1rem', 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          flexWrap: 'wrap', 
-          gap: '1rem' 
-        }}>
-          <h1 style={{ 
-            fontSize: '1.75rem', 
-            fontWeight: 'bold', 
-            margin: 0, 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '0.5rem' 
-          }}>
-            🎯 Job Hunter
-            <span style={{ 
-              fontSize: '0.75rem', 
-              opacity: 0.8, 
-              background: 'rgba(255,255,255,0.2)', 
-              padding: '0.25rem 0.5rem', 
-              borderRadius: '0.25rem' 
-            }}>v3.0</span>
-          </h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-            <button 
-              onClick={() => setShowInsights(!showInsights)} 
-              style={{ 
-                background: 'rgba(255,255,255,0.2)', 
-                border: '1px solid rgba(255,255,255,0.3)', 
-                color: 'white', 
-                padding: '0.5rem 1rem', 
-                borderRadius: '0.5rem', 
-                cursor: 'pointer', 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '0.5rem',
-                fontSize: '0.875rem'
-              }}
-            >
-              <BarChart size={16} /> 인사이트
-            </button>
-            <button 
-              onClick={() => setShowApplicationHistory(!showApplicationHistory)} 
-              style={{ 
-                background: 'rgba(255,255,255,0.2)', 
-                border: '1px solid rgba(255,255,255,0.3)', 
-                color: 'white', 
-                padding: '0.5rem 1rem', 
-                borderRadius: '0.5rem', 
-                cursor: 'pointer', 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '0.5rem',
-                fontSize: '0.875rem'
-              }}
-            >
-              <FileText size={16} /> 지원이력 ({applicationHistory.length})
-            </button>
-            <button 
-              onClick={() => setDarkMode(!darkMode)} 
-              style={{ 
-                background: 'rgba(255,255,255,0.2)', 
-                border: '1px solid rgba(255,255,255,0.3)', 
-                color: 'white', 
-                padding: '0.5rem 1rem', 
-                borderRadius: '0.5rem', 
-                cursor: 'pointer', 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '0.5rem',
-                fontSize: '0.875rem'
-              }}
-            >
-              {darkMode ? <Sun size={16} /> : <Moon size={16} />} 
-              {darkMode ? '라이트' : '다크'}
-            </button>
-          </div>
-        </div>
-      </header>
-
+    <Layout>
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1rem' }}>
         {/* 마감 임박 알림 */}
         {urgentJobs.length > 0 && (
@@ -514,24 +381,43 @@ const JobHunter = () => {
             }}>
               <Search size={20} /> 관심 키워드 설정
             </h2>
-            <button 
-              onClick={() => setShowKeywordSettings(!showKeywordSettings)} 
-              style={{ 
-                background: showKeywordSettings ? '#667eea' : 'transparent', 
-                border: `1px solid ${theme.border}`, 
-                color: showKeywordSettings ? 'white' : theme.text, 
-                padding: '0.5rem 1rem', 
-                borderRadius: '0.5rem', 
-                cursor: 'pointer', 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '0.5rem', 
-                fontSize: '0.75rem',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <BellRing size={14} /> 알림 설정
-            </button>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <button 
+                onClick={() => setShowInsights(!showInsights)} 
+                style={{ 
+                  background: 'rgba(103, 126, 234, 0.1)', 
+                  border: '1px solid #667eea', 
+                  color: '#667eea', 
+                  padding: '0.5rem 1rem', 
+                  borderRadius: '0.5rem', 
+                  cursor: 'pointer', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.5rem',
+                  fontSize: '0.875rem'
+                }}
+              >
+                <BarChart size={16} /> 인사이트
+              </button>
+              <button 
+                onClick={() => setShowKeywordSettings(!showKeywordSettings)} 
+                style={{ 
+                  background: showKeywordSettings ? '#667eea' : 'transparent', 
+                  border: `1px solid ${theme.border}`, 
+                  color: showKeywordSettings ? 'white' : theme.text, 
+                  padding: '0.5rem 1rem', 
+                  borderRadius: '0.5rem', 
+                  cursor: 'pointer', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.5rem', 
+                  fontSize: '0.75rem',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <BellRing size={14} /> 알림 설정
+              </button>
+            </div>
           </div>
 
           {/* 키워드 알림 설정 */}
@@ -770,7 +656,6 @@ const JobHunter = () => {
               const hasApplied = applicationHistory.some(app => app.jobId === job.id)
               const daysUntilDeadline = job.deadline ? Math.ceil((new Date(job.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : null
               
-              // 수정된 카드 스타일 - 위계구분 강화
               const cardStyle = job.matchScore >= 70 ? {
                 background: darkMode ? 'linear-gradient(135deg, #064e3b 0%, #065f46 100%)' : 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
                 border: '2px solid #10b981',
@@ -845,20 +730,19 @@ const JobHunter = () => {
                     </div>
                   )}
 
-                  {/* Mobile-first layout restructure */}
                   <div style={{
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '1rem',
                     marginBottom: '1rem'
                   }}>
-                    {/* Match percentage badge - moved to top for mobile */}
                     <div style={{
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'flex-start',
                       gap: '1rem'
                     }}>
+                      {/* Fixed: Remove ellipsis and display full title */}
                       <h3 style={{ 
                         fontSize: '1.125rem',
                         fontWeight: '600', 
@@ -867,11 +751,16 @@ const JobHunter = () => {
                         lineHeight: 1.4,
                         wordBreak: 'keep-all',
                         flex: 1,
-                        minWidth: 0
+                        minWidth: 0,
+                        // Remove any text overflow properties
+                        overflow: 'visible',
+                        textOverflow: 'initial',
+                        whiteSpace: 'normal'
                       }} 
                       dangerouslySetInnerHTML={{ __html: highlightKeywords(job.title) }} 
                       />
                       
+                      {/* Fixed: Better positioning for percentage badge */}
                       <div style={{ 
                         display: 'flex', 
                         alignItems: 'center', 
@@ -886,15 +775,15 @@ const JobHunter = () => {
                         borderRadius: '1.5rem', 
                         fontSize: '0.75rem', 
                         fontWeight: '600',
-                        flexShrink: 0
+                        flexShrink: 0,
+                        alignSelf: 'flex-start', // Prevents stretching
+                        marginTop: '0.25rem' // Small offset for better alignment
                       }}>
                         <Percent size={12} /> {job.matchScore}%
                       </div>
                     </div>
                     
                     <div>
-                      
-                      {/* 메리트 칩들을 헤더 바로 아래로 이동 */}
                       <div style={{
                         display: 'flex',
                         gap: '0.5rem',
@@ -1578,7 +1467,7 @@ const JobHunter = () => {
                       🏷️ 관련 키워드
                     </h3>
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      {selectedJobForDetails.keywords.map((keyword, index) => (
+                      {selectedJobForDetails.keywords.map((keyword: string, index: number) => (
                         <span 
                           key={index}
                           style={{ 
@@ -1712,13 +1601,13 @@ const JobHunter = () => {
               fontSize: '1.1rem',
               color: theme.text
             }}>
-              🚀 Job Hunter v3.0 - 피드백 완벽 반영! ✨
+              🚀 Job Hunter v3.0 - Multi-Page 업데이트! ✨
             </p>
             <p style={{ 
               marginBottom: '1rem', 
               color: theme.textSecondary 
             }}>
-              키워드별 알림 설정, 지원 이력 자동 저장, 다크모드 기능 추가!
+              북마크, 이력서관리, 지원현황 페이지가 추가되었습니다!
             </p>
             <div style={{ 
               display: 'flex', 
@@ -1728,16 +1617,16 @@ const JobHunter = () => {
               color: theme.textSecondary,
               flexWrap: 'wrap'
             }}>
-              <span>🔔 키워드별 알림</span>
-              <span>💾 지원이력 자동저장</span>
-              <span>📅 마감임박 알림</span>
+              <span>🔖 북마크 관리</span>
+              <span>📄 이력서 업로드</span>
+              <span>📊 지원현황 추적</span>
               <span>🌙 다크모드</span>
-              <span>📊 취업활동 인사이트</span>
+              <span>💾 데이터 자동저장</span>
             </div>
           </div>
         </footer>
       </div>
-    </div>
+    </Layout>
   )
 }
 
