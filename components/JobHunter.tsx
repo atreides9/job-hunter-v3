@@ -155,12 +155,13 @@ const JobHunter = () => {
   const [selectedJobForDetails, setSelectedJobForDetails] = useState<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
   const jobsPerPage = 3
 
+  // Using CSS variables from Apple Design System
   const theme = {
-    bg: darkMode ? '#0f172a' : '#f8fafc',
-    cardBg: darkMode ? '#1e293b' : 'white',
-    text: darkMode ? '#f1f5f9' : '#334155',
-    textSecondary: darkMode ? '#94a3b8' : '#64748b',
-    border: darkMode ? '#334155' : '#e2e8f0'
+    bg: 'var(--bg-primary)',
+    cardBg: 'var(--bg-tertiary)',
+    text: 'var(--text-primary)',
+    textSecondary: 'var(--text-secondary)',
+    border: 'var(--separator)'
   }
 
   // 컴포넌트 마운트 상태 추적
@@ -785,36 +786,17 @@ const JobHunter = () => {
 
                     {/* 높은 매칭률 배지 */}
                     {job.matchScore >= 70 && (
-                      <div style={{ 
-                        background: '#10b981', 
-                        color: 'white', 
-                        padding: '0.25rem 0.75rem', 
-                        borderRadius: '1rem', 
-                        fontSize: '0.75rem', 
-                        fontWeight: '600',
-                        whiteSpace: 'nowrap'
-                      }}>
+                      <div className="badge badge-excellent">
                         ⭐ 높은 매칭률
                       </div>
                     )}
 
                     {/* 매칭률 퍼센트 배지 - moved here to prevent overlap */}
-                    <div style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: '0.5rem', 
-                      background: job.matchScore >= 75 ? '#dcfce7' : 
-                                 job.matchScore >= 50 ? '#fef3c7' : 
-                                 job.matchScore >= 25 ? '#fed7aa' : '#f1f5f9',
-                      color: job.matchScore >= 75 ? '#166534' : 
-                             job.matchScore >= 50 ? '#92400e' : 
-                             job.matchScore >= 25 ? '#c2410c' : '#64748b',
-                      padding: '0.5rem 0.75rem', 
-                      borderRadius: '1.5rem', 
-                      fontSize: '0.75rem', 
-                      fontWeight: '600',
-                      whiteSpace: 'nowrap'
-                    }}>
+                    <div className={`badge ${
+                      job.matchScore >= 75 ? 'badge-excellent' : 
+                      job.matchScore >= 50 ? 'badge-good' : 
+                      job.matchScore >= 25 ? 'badge-fair' : 'badge-poor'
+                    }`}>
                       <Percent size={12} /> {job.matchScore}%
                     </div>
                   </div>
@@ -1001,29 +983,14 @@ const JobHunter = () => {
                     flexWrap: 'wrap', 
                     gap: '1rem' 
                   }}>
-                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                       <button
                         onClick={(e) => {
                           e.preventDefault()
                           e.stopPropagation()
                           applyToJob(job)
                         }}
-                        style={{ 
-                          background: hasApplied ? '#10b981' : '#667eea', 
-                          color: 'white', 
-                          border: 'none', 
-                          padding: '0.75rem 1.5rem', 
-                          borderRadius: '0.5rem', 
-                          cursor: 'pointer', 
-                          fontWeight: '500', 
-                          fontSize: '0.875rem', 
-                          transition: 'background-color 0.2s ease',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.5rem'
-                        }}
-                        onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = hasApplied ? '#059669' : '#5a67d8'}
-                        onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = hasApplied ? '#10b981' : '#667eea'}
+                        className={`btn ${hasApplied ? 'btn-success' : 'btn-primary'}`}
                       >
                         {hasApplied ? <BookmarkCheck size={16} /> : <FileText size={16} />}
                         {hasApplied ? '지원완료' : '지원하기'}
@@ -1034,31 +1001,11 @@ const JobHunter = () => {
                           e.stopPropagation()
                           toggleBookmark(job.id)
                         }}
-                        style={{ 
-                          background: isBookmarked ? '#f59e0b' : 'transparent', 
-                          color: isBookmarked ? 'white' : '#667eea', 
-                          border: `1px solid ${isBookmarked ? '#f59e0b' : '#667eea'}`, 
-                          padding: '0.75rem 1.5rem', 
-                          borderRadius: '0.5rem', 
-                          cursor: 'pointer', 
-                          fontWeight: '500', 
-                          fontSize: '0.875rem', 
-                          transition: 'all 0.2s ease',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.5rem'
-                        }}
-                        onMouseOver={(e) => {
-                          if (!isBookmarked) {
-                            (e.target as HTMLElement).style.backgroundColor = '#667eea'
-                            ;(e.target as HTMLElement).style.color = 'white'
-                          }
-                        }}
-                        onMouseOut={(e) => {
-                          if (!isBookmarked) {
-                            (e.target as HTMLElement).style.backgroundColor = 'transparent'
-                            ;(e.target as HTMLElement).style.color = '#667eea'
-                          }
+                        className={`btn ${isBookmarked ? 'btn-secondary' : 'btn-secondary'}`}
+                        style={{
+                          background: isBookmarked ? 'var(--orange)' : 'var(--fill-tertiary)',
+                          color: isBookmarked ? 'white' : 'var(--blue)',
+                          border: `1px solid ${isBookmarked ? 'var(--orange)' : 'var(--fill-secondary)'}`
                         }}
                       >
                         {isBookmarked ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}

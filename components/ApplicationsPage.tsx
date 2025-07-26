@@ -16,16 +16,17 @@ const ApplicationsPage: React.FC = () => {
   const [filterStatus, setFilterStatus] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
 
+  // Using CSS variables from Apple Design System
   const theme = {
-    bg: darkMode ? '#0f172a' : '#f8fafc',
-    cardBg: darkMode ? '#1e293b' : 'white',
-    text: darkMode ? '#f1f5f9' : '#334155',
-    textSecondary: darkMode ? '#94a3b8' : '#64748b',
-    border: darkMode ? '#334155' : '#e2e8f0',
-    tableBg: darkMode ? '#0f172a' : '#ffffff',
-    tableHeaderBg: darkMode ? '#1e293b' : '#f8fafc',
-    tableRowBg: darkMode ? '#1e293b' : '#ffffff',
-    tableRowHoverBg: darkMode ? '#334155' : '#f1f5f9'
+    bg: 'var(--bg-primary)',
+    cardBg: 'var(--bg-tertiary)',
+    text: 'var(--text-primary)',
+    textSecondary: 'var(--text-secondary)',
+    border: 'var(--separator)',
+    tableBg: 'var(--bg-tertiary)',
+    tableHeaderBg: 'var(--bg-secondary)',
+    tableRowBg: 'var(--bg-tertiary)',
+    tableRowHoverBg: 'var(--fill-quaternary)'
   }
 
   // Enhanced applications data with job details

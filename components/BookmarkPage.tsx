@@ -19,12 +19,13 @@ const BookmarkPage: React.FC = () => {
   const [sortBy, setSortBy] = useState('posted_date')
   const [filterStatus, setFilterStatus] = useState('all')
 
+  // Using CSS variables from Apple Design System
   const theme = {
-    bg: darkMode ? '#0f172a' : '#f8fafc',
-    cardBg: darkMode ? '#1e293b' : 'white',
-    text: darkMode ? '#f1f5f9' : '#334155',
-    textSecondary: darkMode ? '#94a3b8' : '#64748b',
-    border: darkMode ? '#334155' : '#e2e8f0'
+    bg: 'var(--bg-primary)',
+    cardBg: 'var(--bg-tertiary)',
+    text: 'var(--text-primary)',
+    textSecondary: 'var(--text-secondary)',
+    border: 'var(--separator)'
   }
 
   // Get bookmarked jobs with match scores and application status
@@ -349,37 +350,17 @@ const BookmarkPage: React.FC = () => {
                       flexShrink: 0
                     }}>
                       {/* Application Status Badge */}
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.25rem',
-                        background: job.hasApplied ? '#dcfce7' : '#fef3c7',
-                        color: job.hasApplied ? '#166534' : '#92400e',
-                        padding: '0.25rem 0.5rem',
-                        borderRadius: '1rem',
-                        fontSize: '0.75rem',
-                        fontWeight: '600'
-                      }}>
+                      <div className={`badge ${job.hasApplied ? 'badge-applied' : 'badge-pending'}`}>
                         {job.hasApplied ? <CheckCircle size={10} /> : <CircleDot size={10} />}
                         {job.hasApplied ? '지원완료' : '대기중'}
                       </div>
                       
                       {/* Match Score Badge */}
-                      <div style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '0.5rem', 
-                        background: job.matchScore >= 75 ? '#dcfce7' : 
-                                   job.matchScore >= 50 ? '#fef3c7' : 
-                                   job.matchScore >= 25 ? '#fed7aa' : '#f1f5f9',
-                        color: job.matchScore >= 75 ? '#166534' : 
-                               job.matchScore >= 50 ? '#92400e' : 
-                               job.matchScore >= 25 ? '#c2410c' : '#64748b',
-                        padding: '0.5rem 0.75rem', 
-                        borderRadius: '1.5rem', 
-                        fontSize: '0.75rem', 
-                        fontWeight: '600'
-                      }}>
+                      <div className={`badge ${
+                        job.matchScore >= 75 ? 'badge-excellent' : 
+                        job.matchScore >= 50 ? 'badge-good' : 
+                        job.matchScore >= 25 ? 'badge-fair' : 'badge-poor'
+                      }`}>
                         <Percent size={12} /> {job.matchScore}%
                       </div>
                     </div>
@@ -405,25 +386,10 @@ const BookmarkPage: React.FC = () => {
                     flexWrap: 'wrap', 
                     gap: '1rem' 
                   }}>
-                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                       <button
                         onClick={() => applyToJob(job)}
-                        style={{ 
-                          background: hasApplied ? '#10b981' : '#667eea', 
-                          color: 'white', 
-                          border: 'none', 
-                          padding: '0.75rem 1.5rem', 
-                          borderRadius: '0.5rem', 
-                          cursor: 'pointer', 
-                          fontWeight: '500', 
-                          fontSize: '0.875rem', 
-                          transition: 'background-color 0.2s ease',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.5rem'
-                        }}
-                        onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = hasApplied ? '#059669' : '#5a67d8'}
-                        onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = hasApplied ? '#10b981' : '#667eea'}
+                        className={`btn ${hasApplied ? 'btn-success' : 'btn-primary'}`}
                       >
                         <FileText size={16} />
                         {hasApplied ? '지원완료' : '지원하기'}
@@ -431,22 +397,7 @@ const BookmarkPage: React.FC = () => {
 
                       <button
                         onClick={() => toggleBookmark(job.id)}
-                        style={{ 
-                          background: '#ef4444', 
-                          color: 'white', 
-                          border: 'none', 
-                          padding: '0.75rem 1.5rem', 
-                          borderRadius: '0.5rem', 
-                          cursor: 'pointer', 
-                          fontWeight: '500', 
-                          fontSize: '0.875rem', 
-                          transition: 'background-color 0.2s ease',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.5rem'
-                        }}
-                        onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = '#dc2626'}
-                        onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = '#ef4444'}
+                        className="btn btn-destructive"
                       >
                         <Trash2 size={16} />
                         북마크 제거

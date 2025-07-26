@@ -31,13 +31,14 @@ const JobDetailPage: React.FC<JobDetailPageProps> = ({ jobId }) => {
   const isBookmarked = bookmarkedJobs.includes(parseInt(jobId))
   const hasApplied = applicationHistory.some(app => app.jobId === parseInt(jobId))
 
+  // Using CSS variables from Apple Design System
   const theme = {
-    bg: darkMode ? '#0f172a' : '#f8fafc',
-    cardBg: darkMode ? '#1e293b' : 'white',
-    text: darkMode ? '#f1f5f9' : '#334155',
-    textSecondary: darkMode ? '#94a3b8' : '#64748b',
-    border: darkMode ? '#334155' : '#e2e8f0',
-    accent: '#667eea'
+    bg: 'var(--bg-primary)',
+    cardBg: 'var(--bg-tertiary)',
+    text: 'var(--text-primary)',
+    textSecondary: 'var(--text-secondary)',
+    border: 'var(--separator)',
+    accent: 'var(--blue)'
   }
 
   if (!job) {
@@ -185,14 +186,12 @@ const JobDetailPage: React.FC<JobDetailPageProps> = ({ jobId }) => {
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button
                 onClick={() => toggleBookmark(job.id)}
+                className={`btn ${isBookmarked ? 'btn-secondary' : 'btn-secondary'}`}
                 style={{
-                  background: isBookmarked ? theme.accent : 'transparent',
-                  color: isBookmarked ? 'white' : theme.accent,
-                  border: `1px solid ${theme.accent}`,
-                  padding: '0.75rem',
-                  borderRadius: '0.5rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
+                  background: isBookmarked ? 'var(--orange)' : 'var(--fill-tertiary)',
+                  color: isBookmarked ? 'white' : 'var(--blue)',
+                  border: `1px solid ${isBookmarked ? 'var(--orange)' : 'var(--fill-secondary)'}`,
+                  padding: '0.75rem'
                 }}
               >
                 {isBookmarked ? <BookmarkCheck size={20} /> : <Bookmark size={20} />}
@@ -201,17 +200,10 @@ const JobDetailPage: React.FC<JobDetailPageProps> = ({ jobId }) => {
               <button
                 onClick={handleApply}
                 disabled={hasApplied}
+                className={`btn ${hasApplied ? 'btn-secondary' : 'btn-primary'}`}
                 style={{
-                  background: hasApplied ? theme.textSecondary : theme.accent,
-                  color: 'white',
-                  border: 'none',
-                  padding: '0.75rem 1.5rem',
-                  borderRadius: '0.5rem',
-                  cursor: hasApplied ? 'not-allowed' : 'pointer',
-                  fontSize: '1rem',
-                  fontWeight: '600',
                   opacity: hasApplied ? 0.6 : 1,
-                  transition: 'all 0.2s ease'
+                  cursor: hasApplied ? 'not-allowed' : 'pointer'
                 }}
               >
                 {hasApplied ? '지원완료' : '지원하기'}

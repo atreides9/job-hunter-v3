@@ -1,0 +1,360 @@
+/* Apple Design System Theme */
+:root {
+  /* Light Mode Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f2f2f7;
+  --bg-tertiary: #ffffff;
+  --bg-grouped: #f2f2f7;
+  
+  --text-primary: #000000;
+  --text-secondary: rgba(60, 60, 67, 0.6);
+  --text-tertiary: rgba(60, 60, 67, 0.3);
+  
+  --blue: #007AFF;
+  --green: #34C759;
+  --orange: #FF9500;
+  --red: #FF3B30;
+  --purple: #AF52DE;
+  --yellow: #FFCC00;
+  --pink: #FF2D92;
+  --teal: #5AC8FA;
+  --indigo: #5856D6;
+  
+  --fill-primary: rgba(120, 120, 128, 0.20);
+  --fill-secondary: rgba(120, 120, 128, 0.16);
+  --fill-tertiary: rgba(120, 120, 128, 0.12);
+  --fill-quaternary: rgba(120, 120, 128, 0.08);
+  
+  --separator: rgba(60, 60, 67, 0.36);
+  --separator-opaque: #C6C6C8;
+  
+  /* Shadows */
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-2: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  --shadow-3: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+:root[data-theme="dark"] {
+  /* Dark Mode Colors */
+  --bg-primary: #000000;
+  --bg-secondary: #1c1c1e;
+  --bg-tertiary: #2c2c2e;
+  --bg-grouped: #1c1c1e;
+  
+  --text-primary: #ffffff;
+  --text-secondary: rgba(235, 235, 245, 0.6);
+  --text-tertiary: rgba(235, 235, 245, 0.3);
+  
+  --blue: #007AFF;
+  --green: #32D74B;
+  --orange: #FF9F0A;
+  --red: #FF453A;
+  --purple: #BF5AF2;
+  --yellow: #FFD60A;
+  --pink: #FF375F;
+  --teal: #64D2FF;
+  --indigo: #5E5CE6;
+  
+  --fill-primary: rgba(120, 120, 128, 0.36);
+  --fill-secondary: rgba(120, 120, 128, 0.32);
+  --fill-tertiary: rgba(120, 120, 128, 0.24);
+  --fill-quaternary: rgba(120, 120, 128, 0.18);
+  
+  --separator: rgba(84, 84, 88, 0.60);
+  --separator-opaque: #38383A;
+  
+  /* Shadows for dark mode */
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 3px 6px rgba(0, 0, 0, 0.4), 0 3px 6px rgba(0, 0, 0, 0.5);
+  --shadow-3: 0 10px 20px rgba(0, 0, 0, 0.5), 0 6px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* Apple Button System */
+.btn {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.btn-primary {
+  background: var(--blue);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+}
+
+.btn-primary:hover {
+  background: #0056CC;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 122, 255, 0.3);
+}
+
+.btn-secondary {
+  background: var(--fill-tertiary);
+  color: var(--blue);
+  border: 1px solid var(--fill-secondary);
+}
+
+.btn-secondary:hover {
+  background: var(--fill-secondary);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+  background: var(--fill-primary);
+}
+
+.btn-destructive {
+  background: var(--red);
+  color: white;
+  box-shadow: 0 2px 8px rgba(255, 59, 48, 0.3);
+}
+
+.btn-destructive:hover {
+  background: #D70015;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.4);
+}
+
+.btn-destructive:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(255, 59, 48, 0.3);
+}
+
+.btn-success {
+  background: var(--green);
+  color: white;
+  box-shadow: 0 2px 8px rgba(52, 199, 89, 0.3);
+}
+
+.btn-success:hover {
+  background: #248A3D;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 199, 89, 0.4);
+}
+
+.btn-success:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(52, 199, 89, 0.3);
+}
+
+/* Apple Badge System */
+.badge {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border-radius: 12px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  min-width: 20px;
+  justify-content: center;
+}
+
+.badge-excellent {
+  background: linear-gradient(135deg, var(--green) 0%, #30D158 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(50, 215, 75, 0.3);
+}
+
+.badge-good {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--indigo) 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+}
+
+.badge-fair {
+  background: linear-gradient(135deg, var(--orange) 0%, var(--yellow) 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(255, 149, 0, 0.3);
+}
+
+.badge-poor {
+  background: var(--fill-tertiary);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.badge-applied {
+  background: var(--green);
+  color: white;
+}
+
+.badge-pending {
+  background: var(--orange);
+  color: white;
+}
+
+/* Card System */
+.card {
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+  border: 1px solid var(--separator);
+  box-shadow: var(--shadow-1);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-2);
+}
+
+.card-interactive {
+  cursor: pointer;
+}
+
+.card-interactive:active {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-1);
+}
+
+/* Header System */
+.header {
+  background: var(--bg-secondary);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--separator);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.nav-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-primary {
+  gap: 16px;
+}
+
+.nav-secondary {
+  gap: 8px;
+}
+
+.nav-item {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  position: relative;
+}
+
+.nav-item:hover {
+  background: var(--fill-quaternary);
+}
+
+.nav-item.active {
+  background: var(--fill-tertiary);
+  font-weight: 600;
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--blue);
+  border-radius: 50%;
+}
+
+.nav-separator {
+  width: 1px;
+  height: 24px;
+  background: var(--separator);
+  margin: 0 8px;
+}
+
+/* Typography */
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-tertiary {
+  color: var(--text-tertiary);
+}
+
+/* Utilities */
+.bg-primary {
+  background: var(--bg-primary);
+}
+
+.bg-secondary {
+  background: var(--bg-secondary);
+}
+
+.bg-tertiary {
+  background: var(--bg-tertiary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header-content {
+    padding: 0 12px;
+    height: 56px;
+  }
+  
+  .nav-group {
+    gap: 4px;
+  }
+  
+  .nav-primary {
+    gap: 8px;
+  }
+  
+  .nav-item {
+    padding: 4px 8px;
+    font-size: 13px;
+  }
+  
+  .btn {
+    padding: 6px 12px;
+    font-size: 13px;
+    min-height: 28px;
+  }
+}
