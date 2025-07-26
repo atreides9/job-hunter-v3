@@ -350,7 +350,7 @@ const JobHunter = () => {
             }}>
               <TrendingUp size={20} /> 📈 나의 취업 활동 인사이트
             </h3>
-            <div style={{ display: 'grid', gap: '0.5rem' }}>
+            <div className="md-gap-sm" style={{ display: 'grid' }}>
               {insights.map((insight, index) => (
                 <div key={index} style={{ 
                   color: theme.textSecondary,
@@ -633,31 +633,26 @@ const JobHunter = () => {
         </div>
 
         {/* 필터 */}
-        <div style={{ 
-          background: theme.cardBg, 
-          padding: '1rem 1.5rem', 
-          borderRadius: '1rem', 
-          marginBottom: '1.5rem', 
+        <div className="md-card md-card--outlined md-padding-lg" style={{ 
+          marginBottom: '24px', 
           display: 'flex', 
-          gap: '1rem', 
+          gap: '16px', 
           alignItems: 'center', 
-          flexWrap: 'wrap', 
-          border: `1px solid ${theme.border}`,
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+          flexWrap: 'wrap'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Filter size={16} color={theme.text} />
-            <label style={{ fontSize: '0.875rem', fontWeight: '500', color: theme.text }}>최소 일치율:</label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Filter size={16} color="var(--md-sys-color-on-surface)" />
+            <label className="md-typescale-label-large">최소 일치율:</label>
             <select 
               value={filterScore} 
               onChange={(e) => setFilterScore(Number(e.target.value))} 
               style={{ 
-                padding: '0.5rem', 
-                border: `1px solid ${theme.border}`, 
-                borderRadius: '0.25rem', 
-                background: theme.cardBg, 
-                color: theme.text,
-                fontSize: '0.875rem'
+                padding: '8px 12px', 
+                border: '1px solid var(--md-sys-color-outline)', 
+                borderRadius: '4px', 
+                backgroundColor: 'var(--md-sys-color-surface-container)',
+                color: 'var(--md-sys-color-on-surface)',
+                fontFamily: 'Roboto, sans-serif'
               }}
             >
               <option value={0}>전체</option>
@@ -666,18 +661,18 @@ const JobHunter = () => {
               <option value={75}>75% 이상</option>
             </select>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <label style={{ fontSize: '0.875rem', fontWeight: '500', color: theme.text }}>정렬:</label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <label className="md-typescale-label-large">정렬:</label>
             <select 
               value={sortBy} 
               onChange={(e) => setSortBy(e.target.value)} 
               style={{ 
-                padding: '0.5rem', 
-                border: `1px solid ${theme.border}`, 
-                borderRadius: '0.25rem', 
-                background: theme.cardBg, 
-                color: theme.text,
-                fontSize: '0.875rem'
+                padding: '8px 12px', 
+                border: '1px solid var(--md-sys-color-outline)', 
+                borderRadius: '4px', 
+                backgroundColor: 'var(--md-sys-color-surface-container)',
+                color: 'var(--md-sys-color-on-surface)',
+                fontFamily: 'Roboto, sans-serif'
               }}
             >
               <option value="matchScore">일치율 높은 순</option>
@@ -685,30 +680,24 @@ const JobHunter = () => {
               <option value="deadline">마감 임박순</option>
             </select>
           </div>
-          <div style={{ 
-            marginLeft: 'auto', 
-            fontSize: '0.875rem', 
-            color: theme.textSecondary 
+          <div className="md-typescale-body-medium" style={{ 
+            marginLeft: 'auto',
+            color: 'var(--md-sys-color-on-surface-variant)'
           }}>
             {filteredJobs.length}개의 공고
           </div>
         </div>
 
         {/* 공고 카드 */}
-        <div style={{ display: 'grid', gap: '1.5rem', marginBottom: '2rem' }}>
+        <div className="md-gap-2xl" style={{ display: 'grid', marginBottom: '32px' }}>
           {paginatedJobs.length === 0 ? (
-            <div style={{
-              background: theme.cardBg,
-              borderRadius: '1rem',
-              padding: '3rem',
-              textAlign: 'center',
-              border: `1px solid ${theme.border}`,
-              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+            <div className="md-card md-card--outlined md-padding-6xl" style={{
+              textAlign: 'center'
             }}>
-              <div style={{ fontSize: '1.5rem', color: theme.textSecondary, marginBottom: '1rem' }}>
+              <div className="md-typescale-headline-medium" style={{ color: 'var(--md-sys-color-on-surface-variant)', marginBottom: '16px' }}>
                 조건에 맞는 채용공고가 없습니다
               </div>
-              <div style={{ color: theme.textSecondary }}>
+              <div className="md-typescale-body-large" style={{ color: 'var(--md-sys-color-on-surface-variant)' }}>
                 키워드나 필터 조건을 변경해보세요
               </div>
             </div>
@@ -718,40 +707,30 @@ const JobHunter = () => {
               const hasApplied = applicationHistory.some(app => app.jobId === job.id)
               const daysUntilDeadline = job.deadline ? Math.ceil((new Date(job.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : null
               
+              const cardClass = job.matchScore >= 70 ? 'md-card md-card--filled' : 'md-card md-card--elevated'
               const cardStyle = job.matchScore >= 70 ? {
-                background: darkMode ? 'linear-gradient(135deg, #064e3b 0%, #065f46 100%)' : 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
-                border: '2px solid #10b981',
-                boxShadow: darkMode 
-                  ? '0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 2px #10b981' 
-                  : '0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 2px #10b981'
-              } : {
-                background: theme.cardBg,
-                border: darkMode ? `2px solid ${theme.border}` : `1px solid ${theme.border}`,
-                boxShadow: darkMode 
-                  ? '0 8px 25px rgba(0, 0, 0, 0.25)' 
-                  : '0 4px 15px rgba(0, 0, 0, 0.08)'
-              }
+                backgroundColor: 'var(--md-sys-color-tertiary-container)',
+                color: 'var(--md-sys-color-on-tertiary-container)',
+                border: '2px solid var(--md-sys-color-tertiary)'
+              } : {}
               
               return (
                 <div 
                   key={job.id} 
+                  className={`${cardClass} md-card-interactive`}
                   style={{
                     ...cardStyle,
-                    borderRadius: '1rem', 
-                    padding: '1.5rem', 
+                    padding: '24px', 
                     position: 'relative',
-                    transition: 'all 0.3s ease',
                     cursor: 'pointer'
                   }}
                   onMouseOver={(e) => {
                     e.currentTarget.style.transform = 'translateY(-2px)'
-                    e.currentTarget.style.boxShadow = darkMode 
-                      ? '0 12px 35px rgba(0, 0, 0, 0.4)' 
-                      : '0 12px 35px rgba(0, 0, 0, 0.15)'
+                    e.currentTarget.style.boxShadow = '0px 2px 6px 2px rgba(0, 0, 0, 0.15)'
                   }}
                   onMouseOut={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.boxShadow = cardStyle.boxShadow
+                    e.currentTarget.style.boxShadow = '0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 2px rgba(0, 0, 0, 0.24)'
                   }}
                   onClick={() => router.push(`/jobs/${job.id}`)}
                 >
@@ -786,16 +765,16 @@ const JobHunter = () => {
 
                     {/* 높은 매칭률 배지 */}
                     {job.matchScore >= 70 && (
-                      <div className="badge badge-excellent">
+                      <div className="md-badge md-badge--excellent">
                         ⭐ 높은 매칭률
                       </div>
                     )}
 
                     {/* 매칭률 퍼센트 배지 - moved here to prevent overlap */}
-                    <div className={`badge ${
-                      job.matchScore >= 75 ? 'badge-excellent' : 
-                      job.matchScore >= 50 ? 'badge-good' : 
-                      job.matchScore >= 25 ? 'badge-fair' : 'badge-poor'
+                    <div className={`md-badge ${
+                      job.matchScore >= 75 ? 'md-badge--excellent' : 
+                      job.matchScore >= 50 ? 'md-badge--good' : 
+                      job.matchScore >= 25 ? 'md-badge--fair' : 'md-badge--poor'
                     }`}>
                       <Percent size={12} /> {job.matchScore}%
                     </div>
@@ -814,19 +793,15 @@ const JobHunter = () => {
                       gap: '1rem'
                     }}>
                       {/* Job title - full display without ellipsis */}
-                      <h3 style={{ 
-                        fontSize: '1.125rem',
-                        fontWeight: '600', 
-                        marginBottom: '0.5rem',
-                        color: theme.text,
-                        lineHeight: 1.4,
+                      <h3 className="md-typescale-title-large" style={{ 
+                        marginBottom: '8px',
                         wordBreak: 'keep-all',
                         flex: 1,
                         minWidth: 0,
                         overflow: 'visible',
                         textOverflow: 'initial',
                         whiteSpace: 'normal',
-                        paddingRight: '8rem' // Add padding to avoid overlap with badges
+                        paddingRight: '128px' // Add padding to avoid overlap with badges
                       }} 
                       dangerouslySetInnerHTML={{ __html: highlightKeywords(job.title) }} 
                       />
@@ -983,14 +958,18 @@ const JobHunter = () => {
                     flexWrap: 'wrap', 
                     gap: '1rem' 
                   }}>
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <div className="md-gap-sm" style={{ display: 'flex', flexWrap: 'wrap' }}>
                       <button
                         onClick={(e) => {
                           e.preventDefault()
                           e.stopPropagation()
                           applyToJob(job)
                         }}
-                        className={`btn ${hasApplied ? 'btn-success' : 'btn-primary'}`}
+                        className={hasApplied ? 'md-filled-button md-badge--applied' : 'md-filled-button'}
+                        style={{
+                          backgroundColor: hasApplied ? 'var(--md-sys-color-success)' : 'var(--md-sys-color-primary)',
+                          color: hasApplied ? 'var(--md-sys-color-on-success)' : 'var(--md-sys-color-on-primary)'
+                        }}
                       >
                         {hasApplied ? <BookmarkCheck size={16} /> : <FileText size={16} />}
                         {hasApplied ? '지원완료' : '지원하기'}
@@ -1001,11 +980,10 @@ const JobHunter = () => {
                           e.stopPropagation()
                           toggleBookmark(job.id)
                         }}
-                        className={`btn ${isBookmarked ? 'btn-secondary' : 'btn-secondary'}`}
+                        className={isBookmarked ? 'md-tonal-button' : 'md-outlined-button'}
                         style={{
-                          background: isBookmarked ? 'var(--orange)' : 'var(--fill-tertiary)',
-                          color: isBookmarked ? 'white' : 'var(--blue)',
-                          border: `1px solid ${isBookmarked ? 'var(--orange)' : 'var(--fill-secondary)'}`
+                          backgroundColor: isBookmarked ? 'var(--md-sys-color-warning-container)' : undefined,
+                          color: isBookmarked ? 'var(--md-sys-color-on-warning-container)' : 'var(--md-sys-color-primary)'
                         }}
                       >
                         {isBookmarked ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}

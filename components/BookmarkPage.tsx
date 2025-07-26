@@ -19,13 +19,13 @@ const BookmarkPage: React.FC = () => {
   const [sortBy, setSortBy] = useState('posted_date')
   const [filterStatus, setFilterStatus] = useState('all')
 
-  // Using CSS variables from Apple Design System
+  // Using CSS variables from Material Design 3
   const theme = {
-    bg: 'var(--bg-primary)',
-    cardBg: 'var(--bg-tertiary)',
-    text: 'var(--text-primary)',
-    textSecondary: 'var(--text-secondary)',
-    border: 'var(--separator)'
+    bg: 'var(--md-sys-color-background)',
+    cardBg: 'var(--md-sys-color-surface-container-low)',
+    text: 'var(--md-sys-color-on-surface)',
+    textSecondary: 'var(--md-sys-color-on-surface-variant)',
+    border: 'var(--md-sys-color-outline-variant)'
   }
 
   // Get bookmarked jobs with match scores and application status
@@ -350,16 +350,16 @@ const BookmarkPage: React.FC = () => {
                       flexShrink: 0
                     }}>
                       {/* Application Status Badge */}
-                      <div className={`badge ${job.hasApplied ? 'badge-applied' : 'badge-pending'}`}>
+                      <div className={`md-badge ${job.hasApplied ? 'md-badge--applied' : 'md-badge--pending'}`}>
                         {job.hasApplied ? <CheckCircle size={10} /> : <CircleDot size={10} />}
                         {job.hasApplied ? '지원완료' : '대기중'}
                       </div>
                       
                       {/* Match Score Badge */}
-                      <div className={`badge ${
-                        job.matchScore >= 75 ? 'badge-excellent' : 
-                        job.matchScore >= 50 ? 'badge-good' : 
-                        job.matchScore >= 25 ? 'badge-fair' : 'badge-poor'
+                      <div className={`md-badge ${
+                        job.matchScore >= 75 ? 'md-badge--excellent' : 
+                        job.matchScore >= 50 ? 'md-badge--good' : 
+                        job.matchScore >= 25 ? 'md-badge--fair' : 'md-badge--poor'
                       }`}>
                         <Percent size={12} /> {job.matchScore}%
                       </div>
@@ -389,7 +389,11 @@ const BookmarkPage: React.FC = () => {
                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                       <button
                         onClick={() => applyToJob(job)}
-                        className={`btn ${hasApplied ? 'btn-success' : 'btn-primary'}`}
+                        className={hasApplied ? 'md-filled-button' : 'md-filled-button'}
+                        style={{
+                          backgroundColor: hasApplied ? 'var(--md-sys-color-success)' : 'var(--md-sys-color-primary)',
+                          color: hasApplied ? 'var(--md-sys-color-on-success)' : 'var(--md-sys-color-on-primary)'
+                        }}
                       >
                         <FileText size={16} />
                         {hasApplied ? '지원완료' : '지원하기'}
@@ -397,7 +401,11 @@ const BookmarkPage: React.FC = () => {
 
                       <button
                         onClick={() => toggleBookmark(job.id)}
-                        className="btn btn-destructive"
+                        className="md-outlined-button"
+                        style={{
+                          color: 'var(--md-sys-color-error)',
+                          borderColor: 'var(--md-sys-color-error)'
+                        }}
                       >
                         <Trash2 size={16} />
                         북마크 제거

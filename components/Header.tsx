@@ -32,95 +32,115 @@ const Header: React.FC = () => {
 
   const NavItem = ({ item, isActive }: { item: NavItemType, isActive: boolean }) => (
     <Link href={item.path} style={{ textDecoration: 'none' }}>
-      <button className={`nav-item ${isActive ? 'active' : ''}`}>
-        <item.icon size={16} />
-        <span>{item.label}</span>
+      <div className={`md-navigation-item ${isActive ? 'md-navigation-item--active' : ''}`}>
+        <item.icon size={20} />
+        <span className="md-typescale-label-large">{item.label}</span>
         {item.count !== undefined && item.count > 0 && (
-          <span className="badge" style={{
-            background: 'var(--blue)',
-            color: 'white',
-            borderRadius: '10px',
+          <span className="md-badge" style={{
+            backgroundColor: 'var(--md-sys-color-primary)',
+            color: 'var(--md-sys-color-on-primary)',
+            borderRadius: '12px',
             padding: '2px 6px',
             fontSize: '11px',
-            fontWeight: '600',
-            minWidth: '18px',
-            height: '18px',
+            fontWeight: '500',
+            minWidth: '20px',
+            height: '20px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            marginLeft: '4px'
           }}>
             {item.count}
           </span>
         )}
-      </button>
+      </div>
     </Link>
   )
 
   return (
-    <header className="header">
-      <div className="header-content">
-        {/* Logo */}
-        <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '8px',
-            fontSize: '20px',
-            fontWeight: '700',
-            color: 'var(--text-primary)'
-          }}>
-            🎯 Job Hunter
-            <span style={{ 
-              fontSize: '11px', 
-              opacity: 0.6, 
-              background: 'var(--fill-tertiary)', 
-              padding: '2px 6px', 
-              borderRadius: '4px',
-              fontWeight: '500'
-            }}>v3.0</span>
+    <header className="md-top-app-bar">
+      <div className="md-top-app-bar__row">
+        {/* Logo Section */}
+        <section className="md-top-app-bar__section md-top-app-bar__section--align-start">
+          <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px'
+            }}>
+              <span className="md-top-app-bar__title">
+                🎯 Job Hunter
+              </span>
+              <span className="md-badge" style={{
+                backgroundColor: 'var(--md-sys-color-secondary-container)',
+                color: 'var(--md-sys-color-on-secondary-container)',
+                fontSize: '10px',
+                fontWeight: '500',
+                padding: '2px 6px',
+                borderRadius: '4px'
+              }}>
+                v3.0
+              </span>
+            </div>
+          </Link>
+        </section>
+
+        {/* Navigation Section */}
+        <section className="md-top-app-bar__section md-top-app-bar__section--align-end">
+          <div className="md-navigation-bar">
+            {/* Primary Navigation */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              {primaryNavItems.map((item) => (
+                <NavItem 
+                  key={item.path} 
+                  item={item} 
+                  isActive={pathname === item.path} 
+                />
+              ))}
+            </div>
+
+            {/* Divider */}
+            <div style={{
+              width: '1px',
+              height: '24px',
+              backgroundColor: 'var(--md-sys-color-outline-variant)',
+              margin: '0 8px'
+            }} />
+
+            {/* Secondary Navigation */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              {secondaryNavItems.map((item) => (
+                <NavItem 
+                  key={item.path} 
+                  item={item} 
+                  isActive={pathname === item.path} 
+                />
+              ))}
+            </div>
+
+            {/* Divider */}
+            <div style={{
+              width: '1px',
+              height: '24px',
+              backgroundColor: 'var(--md-sys-color-outline-variant)',
+              margin: '0 8px'
+            }} />
+
+            {/* Theme Toggle */}
+            <button 
+              onClick={() => setDarkMode(!darkMode)} 
+              className="md-icon-button md-icon-button--outlined"
+              style={{ 
+                width: '40px', 
+                height: '40px',
+                borderRadius: '20px'
+              }}
+              aria-label={darkMode ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            >
+              {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
           </div>
-        </Link>
-        
-        {/* Navigation */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-          {/* Primary Navigation */}
-          <nav className="nav-group nav-primary">
-            {primaryNavItems.map((item) => (
-              <NavItem 
-                key={item.path} 
-                item={item} 
-                isActive={pathname === item.path} 
-              />
-            ))}
-          </nav>
-
-          {/* Separator */}
-          <div className="nav-separator" />
-
-          {/* Secondary Navigation */}
-          <nav className="nav-group nav-secondary">
-            {secondaryNavItems.map((item) => (
-              <NavItem 
-                key={item.path} 
-                item={item} 
-                isActive={pathname === item.path} 
-              />
-            ))}
-          </nav>
-
-          {/* Separator */}
-          <div className="nav-separator" />
-
-          {/* Theme Toggle */}
-          <button 
-            onClick={() => setDarkMode(!darkMode)} 
-            className="nav-item"
-            style={{ border: 'none', background: 'transparent' }}
-          >
-            {darkMode ? <Sun size={16} /> : <Moon size={16} />}
-            <span>{darkMode ? '라이트' : '다크'}</span>
-          </button>
-        </div>
+        </section>
       </div>
     </header>
   )

@@ -1,0 +1,778 @@
+/* Material Design 3 Theme System */
+/* Based on Google Material Design 3 specifications */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+  /* Primary Colors */
+  --md-sys-color-primary: #6750A4;
+  --md-sys-color-on-primary: #FFFFFF;
+  --md-sys-color-primary-container: #EADDFF;
+  --md-sys-color-on-primary-container: #21005D;
+  
+  /* Secondary Colors */
+  --md-sys-color-secondary: #625B71;
+  --md-sys-color-on-secondary: #FFFFFF;
+  --md-sys-color-secondary-container: #E8DEF8;
+  --md-sys-color-on-secondary-container: #1D192B;
+  
+  /* Tertiary Colors */
+  --md-sys-color-tertiary: #7D5260;
+  --md-sys-color-on-tertiary: #FFFFFF;
+  --md-sys-color-tertiary-container: #FFD8E4;
+  --md-sys-color-on-tertiary-container: #31111D;
+  
+  /* Surface Colors */
+  --md-sys-color-surface: #FEF7FF;
+  --md-sys-color-surface-dim: #DED8E1;
+  --md-sys-color-surface-bright: #FEF7FF;
+  --md-sys-color-surface-container-lowest: #FFFFFF;
+  --md-sys-color-surface-container-low: #F7F2FA;
+  --md-sys-color-surface-container: #F3EDF7;
+  --md-sys-color-surface-container-high: #ECE6F0;
+  --md-sys-color-surface-container-highest: #E6E0E9;
+  --md-sys-color-on-surface: #1C1B1F;
+  --md-sys-color-on-surface-variant: #49454F;
+  
+  /* Error Colors */
+  --md-sys-color-error: #B3261E;
+  --md-sys-color-on-error: #FFFFFF;
+  --md-sys-color-error-container: #F9DEDC;
+  --md-sys-color-on-error-container: #410E0B;
+  
+  /* Outline */
+  --md-sys-color-outline: #79747E;
+  --md-sys-color-outline-variant: #CAC4D0;
+  
+  /* Background */
+  --md-sys-color-background: #FEF7FF;
+  --md-sys-color-on-background: #1C1B1F;
+  
+  /* Success Colors (Custom for Job Hunter) */
+  --md-sys-color-success: #4CAF50;
+  --md-sys-color-on-success: #FFFFFF;
+  --md-sys-color-success-container: #E8F5E8;
+  --md-sys-color-on-success-container: #1B5E20;
+  
+  /* Warning Colors (Custom for Job Hunter) */
+  --md-sys-color-warning: #FF9800;
+  --md-sys-color-on-warning: #FFFFFF;
+  --md-sys-color-warning-container: #FFF3E0;
+  --md-sys-color-on-warning-container: #E65100;
+}
+
+[data-theme="dark"] {
+  /* Primary Colors - Dark */
+  --md-sys-color-primary: #D0BCFF;
+  --md-sys-color-on-primary: #381E72;
+  --md-sys-color-primary-container: #4F378B;
+  --md-sys-color-on-primary-container: #EADDFF;
+  
+  /* Secondary Colors - Dark */
+  --md-sys-color-secondary: #CCC2DC;
+  --md-sys-color-on-secondary: #332D41;
+  --md-sys-color-secondary-container: #4A4458;
+  --md-sys-color-on-secondary-container: #E8DEF8;
+  
+  /* Tertiary Colors - Dark */
+  --md-sys-color-tertiary: #EFB8C8;
+  --md-sys-color-on-tertiary: #492532;
+  --md-sys-color-tertiary-container: #633B48;
+  --md-sys-color-on-tertiary-container: #FFD8E4;
+  
+  /* Surface Colors - Dark */
+  --md-sys-color-surface: #141218;
+  --md-sys-color-surface-dim: #141218;
+  --md-sys-color-surface-bright: #3B383E;
+  --md-sys-color-surface-container-lowest: #0F0D13;
+  --md-sys-color-surface-container-low: #1D1B20;
+  --md-sys-color-surface-container: #211F26;
+  --md-sys-color-surface-container-high: #2B2930;
+  --md-sys-color-surface-container-highest: #36343B;
+  --md-sys-color-on-surface: #E6E0E9;
+  --md-sys-color-on-surface-variant: #CAC4D0;
+  
+  /* Error Colors - Dark */
+  --md-sys-color-error: #F2B8B5;
+  --md-sys-color-on-error: #601410;
+  --md-sys-color-error-container: #8C1D18;
+  --md-sys-color-on-error-container: #F9DEDC;
+  
+  /* Outline - Dark */
+  --md-sys-color-outline: #938F99;
+  --md-sys-color-outline-variant: #49454F;
+  
+  /* Background - Dark */
+  --md-sys-color-background: #141218;
+  --md-sys-color-on-background: #E6E0E9;
+  
+  /* Success Colors - Dark */
+  --md-sys-color-success: #81C784;
+  --md-sys-color-on-success: #1B5E20;
+  --md-sys-color-success-container: #2E7D32;
+  --md-sys-color-on-success-container: #C8E6C9;
+  
+  /* Warning Colors - Dark */
+  --md-sys-color-warning: #FFB74D;
+  --md-sys-color-on-warning: #E65100;
+  --md-sys-color-warning-container: #F57C00;
+  --md-sys-color-on-warning-container: #FFF3E0;
+}
+
+/* Typography Scale */
+.md-typescale-display-large {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 57px;
+  font-weight: 400;
+  line-height: 64px;
+  letter-spacing: -0.25px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-typescale-display-medium {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 45px;
+  font-weight: 400;
+  line-height: 52px;
+  letter-spacing: 0px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-typescale-display-small {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 44px;
+  letter-spacing: 0px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-typescale-headline-large {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 40px;
+  letter-spacing: 0px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-typescale-headline-medium {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 36px;
+  letter-spacing: 0px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-typescale-headline-small {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 32px;
+  letter-spacing: 0px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-typescale-title-large {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 28px;
+  letter-spacing: 0px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-typescale-title-medium {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0.15px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-typescale-title-small {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-typescale-body-large {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-typescale-body-medium {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-typescale-body-small {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-typescale-label-large {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-typescale-label-medium {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-typescale-label-small {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  color: var(--md-sys-color-on-surface);
+}
+
+/* Motion System */
+:root {
+  --md-motion-easing-standard: cubic-bezier(0.2, 0.0, 0, 1.0);
+  --md-motion-easing-emphasized: cubic-bezier(0.2, 0.0, 0, 1.0);
+  --md-motion-easing-decelerated: cubic-bezier(0.0, 0.0, 0, 1.0);
+  --md-motion-easing-accelerated: cubic-bezier(0.3, 0.0, 1, 1);
+  
+  --md-motion-duration-short1: 50ms;
+  --md-motion-duration-short2: 100ms;
+  --md-motion-duration-short3: 150ms;
+  --md-motion-duration-short4: 200ms;
+  --md-motion-duration-medium1: 250ms;
+  --md-motion-duration-medium2: 300ms;
+  --md-motion-duration-medium3: 350ms;
+  --md-motion-duration-medium4: 400ms;
+  --md-motion-duration-long1: 450ms;
+  --md-motion-duration-long2: 500ms;
+  --md-motion-duration-long3: 550ms;
+  --md-motion-duration-long4: 600ms;
+}
+
+/* M3 Component System */
+
+/* Top App Bar */
+.md-top-app-bar {
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  transition: all var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+}
+
+.md-top-app-bar__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 64px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.md-top-app-bar__section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.md-top-app-bar__section--align-start {
+  justify-content: flex-start;
+}
+
+.md-top-app-bar__section--align-end {
+  justify-content: flex-end;
+}
+
+.md-top-app-bar__title {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 28px;
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+}
+
+/* Cards */
+.md-card {
+  background-color: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-surface);
+  border-radius: 12px;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  transition: box-shadow var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  overflow: hidden;
+}
+
+.md-card:hover {
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+}
+
+.md-card--filled {
+  background-color: var(--md-sys-color-surface-container-highest);
+}
+
+.md-card--elevated {
+  background-color: var(--md-sys-color-surface-container-low);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.md-card--outlined {
+  background-color: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  box-shadow: none;
+}
+
+.md-card__content {
+  padding: 16px;
+}
+
+.md-card__header {
+  padding: 16px 16px 0 16px;
+}
+
+.md-card__actions {
+  padding: 8px 16px 16px 16px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Buttons */
+.md-button {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 24px;
+  min-height: 40px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.md-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity var(--md-motion-duration-short1) var(--md-motion-easing-standard);
+}
+
+.md-button:hover::before {
+  opacity: 0.08;
+}
+
+.md-button:focus::before {
+  opacity: 0.12;
+}
+
+.md-button:active::before {
+  opacity: 0.16;
+}
+
+/* Filled Button (Primary) */
+.md-filled-button {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.md-filled-button:disabled {
+  background-color: rgba(var(--md-sys-color-on-surface), 0.12);
+  color: rgba(var(--md-sys-color-on-surface), 0.38);
+}
+
+/* Outlined Button (Secondary) */
+.md-outlined-button {
+  background-color: transparent;
+  color: var(--md-sys-color-primary);
+  border: 1px solid var(--md-sys-color-outline);
+}
+
+.md-outlined-button:disabled {
+  border-color: rgba(var(--md-sys-color-on-surface), 0.12);
+  color: rgba(var(--md-sys-color-on-surface), 0.38);
+}
+
+/* Text Button */
+.md-text-button {
+  background-color: transparent;
+  color: var(--md-sys-color-primary);
+  padding: 10px 12px;
+}
+
+.md-text-button:disabled {
+  color: rgba(var(--md-sys-color-on-surface), 0.38);
+}
+
+/* Tonal Button */
+.md-tonal-button {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+/* Chips */
+.md-chip {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 16px;
+  height: 32px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.md-filter-chip {
+  background-color: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-surface-variant);
+  border: 1px solid var(--md-sys-color-outline);
+}
+
+.md-filter-chip--selected {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-color: transparent;
+}
+
+.md-assist-chip {
+  background-color: transparent;
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline);
+}
+
+.md-input-chip {
+  background-color: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-surface-variant);
+  border: 1px solid var(--md-sys-color-outline);
+}
+
+.md-suggestion-chip {
+  background-color: transparent;
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline);
+}
+
+/* Badges */
+.md-badge {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  border-radius: 6px;
+  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 24px;
+  min-height: 16px;
+}
+
+.md-badge--excellent {
+  background-color: var(--md-sys-color-success-container);
+  color: var(--md-sys-color-on-success-container);
+}
+
+.md-badge--good {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.md-badge--fair {
+  background-color: var(--md-sys-color-warning-container);
+  color: var(--md-sys-color-on-warning-container);
+}
+
+.md-badge--poor {
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.md-badge--applied {
+  background-color: var(--md-sys-color-success-container);
+  color: var(--md-sys-color-on-success-container);
+}
+
+.md-badge--pending {
+  background-color: var(--md-sys-color-warning-container);
+  color: var(--md-sys-color-on-warning-container);
+}
+
+.md-badge--error {
+  background-color: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+}
+
+/* Icon Buttons */
+.md-icon-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  border: none;
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+}
+
+.md-icon-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: currentColor;
+  opacity: 0;
+  border-radius: inherit;
+  transition: opacity var(--md-motion-duration-short1) var(--md-motion-easing-standard);
+}
+
+.md-icon-button:hover::before {
+  opacity: 0.08;
+}
+
+.md-icon-button:focus::before {
+  opacity: 0.12;
+}
+
+.md-icon-button:active::before {
+  opacity: 0.16;
+}
+
+.md-icon-button--filled {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.md-icon-button--tonal {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+.md-icon-button--outlined {
+  border: 1px solid var(--md-sys-color-outline);
+}
+
+/* Navigation */
+.md-navigation-bar {
+  background-color: var(--md-sys-color-surface-container);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.md-navigation-item {
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: var(--md-sys-color-on-surface-variant);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all var(--md-motion-duration-short4) var(--md-motion-easing-standard);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.md-navigation-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: currentColor;
+  opacity: 0;
+  border-radius: inherit;
+  transition: opacity var(--md-motion-duration-short1) var(--md-motion-easing-standard);
+}
+
+.md-navigation-item:hover::before {
+  opacity: 0.08;
+}
+
+.md-navigation-item--active {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  font-weight: 600;
+}
+
+/* Spacing Scale */
+.md-spacing-xs { margin: 4px; }
+.md-spacing-sm { margin: 8px; }
+.md-spacing-md { margin: 12px; }
+.md-spacing-lg { margin: 16px; }
+.md-spacing-xl { margin: 20px; }
+.md-spacing-2xl { margin: 24px; }
+.md-spacing-3xl { margin: 32px; }
+.md-spacing-4xl { margin: 40px; }
+.md-spacing-5xl { margin: 48px; }
+.md-spacing-6xl { margin: 64px; }
+
+.md-padding-xs { padding: 4px; }
+.md-padding-sm { padding: 8px; }
+.md-padding-md { padding: 12px; }
+.md-padding-lg { padding: 16px; }
+.md-padding-xl { padding: 20px; }
+.md-padding-2xl { padding: 24px; }
+.md-padding-3xl { padding: 32px; }
+.md-padding-4xl { padding: 40px; }
+.md-padding-5xl { padding: 48px; }
+.md-padding-6xl { padding: 64px; }
+
+/* Gap utilities */
+.md-gap-xs { gap: 4px; }
+.md-gap-sm { gap: 8px; }
+.md-gap-md { gap: 12px; }
+.md-gap-lg { gap: 16px; }
+.md-gap-xl { gap: 20px; }
+.md-gap-2xl { gap: 24px; }
+.md-gap-3xl { gap: 32px; }
+.md-gap-4xl { gap: 40px; }
+.md-gap-5xl { gap: 48px; }
+.md-gap-6xl { gap: 64px; }
+
+/* Layout utilities */
+.md-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.md-surface {
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-surface-container {
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-surface-container-low {
+  background-color: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-surface);
+}
+
+.md-surface-container-high {
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .md-top-app-bar__row {
+    padding: 0 12px;
+    height: 56px;
+  }
+  
+  .md-button {
+    padding: 8px 16px;
+    font-size: 13px;
+    min-height: 36px;
+  }
+  
+  .md-card__content {
+    padding: 12px;
+  }
+  
+  .md-container {
+    padding: 0 12px;
+  }
+  
+  .md-typescale-headline-large {
+    font-size: 28px;
+    line-height: 36px;
+  }
+  
+  .md-typescale-headline-medium {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .md-top-app-bar__row {
+    padding: 0 8px;
+  }
+  
+  .md-container {
+    padding: 0 8px;
+  }
+  
+  .md-button {
+    padding: 6px 12px;
+    font-size: 12px;
+    min-height: 32px;
+  }
+  
+  .md-card__content {
+    padding: 8px;
+  }
+}

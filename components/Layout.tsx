@@ -22,13 +22,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }, [darkMode])
 
   return (
-    <div className="bg-primary" style={{ 
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
+    <div className="md-surface" style={{ 
+      fontFamily: 'Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', 
       minHeight: '100vh', 
-      transition: 'all 0.3s ease'
+      backgroundColor: 'var(--md-sys-color-background)',
+      color: 'var(--md-sys-color-on-background)',
+      transition: 'all var(--md-motion-duration-medium2) var(--md-motion-easing-standard)'
     }}>
       <Header />
-      <main className="text-primary">
+      <main>
         {children}
       </main>
     </div>
