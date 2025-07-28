@@ -280,6 +280,7 @@ const BookmarkPage: React.FC = () => {
               return (
                 <div 
                   key={job.id}
+                  className="job-card-mobile"
                   style={{
                     background: theme.cardBg,
                     border: `1px solid ${theme.border}`,
@@ -299,17 +300,18 @@ const BookmarkPage: React.FC = () => {
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                     <div style={{ flex: 1 }}>
-                      <h3 style={{ 
+                      <h3 className="job-title" style={{ 
                         fontSize: '1.25rem',
                         fontWeight: '600', 
                         marginBottom: '0.5rem',
                         color: theme.text,
-                        lineHeight: 1.4
+                        lineHeight: 1.4,
+                        paddingRight: '4rem'
                       }} 
                       dangerouslySetInnerHTML={{ __html: highlightKeywords(job.title) }} 
                       />
                       
-                      <div style={{ 
+                      <div className="company-info-mobile" style={{ 
                         display: 'flex', 
                         gap: '1rem', 
                         fontSize: '0.875rem', 
@@ -317,28 +319,32 @@ const BookmarkPage: React.FC = () => {
                         marginBottom: '0.75rem', 
                         flexWrap: 'wrap' 
                       }}>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                          <Building size={14} /> {job.company.name}
-                        </span>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                          <MapPin size={14} /> {job.location}
-                        </span>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                          <Calendar size={14} /> {new Date(job.posted_date).toLocaleDateString('ko-KR')}
-                        </span>
-                        {job.deadline && (
-                          <span style={{ 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            gap: '0.25rem',
-                            color: daysUntilDeadline !== null && daysUntilDeadline <= 3 ? '#ef4444' : theme.textSecondary
-                          }}>
-                            <Clock size={14} /> 마감: {new Date(job.deadline).toLocaleDateString('ko-KR')}
-                            {daysUntilDeadline !== null && daysUntilDeadline <= 3 && daysUntilDeadline >= 0 && (
-                              <span style={{ color: '#ef4444', fontWeight: '600' }}>(D-{daysUntilDeadline})</span>
-                            )}
+                        <div>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                            <Building size={14} /> {job.company.name}
                           </span>
-                        )}
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                            <MapPin size={14} /> {job.location}
+                          </span>
+                        </div>
+                        <div>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                            <Calendar size={14} /> {new Date(job.posted_date).toLocaleDateString('ko-KR')}
+                          </span>
+                          {job.deadline && (
+                            <span style={{ 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              gap: '0.25rem',
+                              color: daysUntilDeadline !== null && daysUntilDeadline <= 3 ? '#ef4444' : theme.textSecondary
+                            }}>
+                              <Clock size={14} /> 마감: {new Date(job.deadline).toLocaleDateString('ko-KR')}
+                              {daysUntilDeadline !== null && daysUntilDeadline <= 3 && daysUntilDeadline >= 0 && (
+                                <span style={{ color: '#ef4444', fontWeight: '600' }}>(D-{daysUntilDeadline})</span>
+                              )}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                     
@@ -379,14 +385,14 @@ const BookmarkPage: React.FC = () => {
                   />
 
                   {/* Actions */}
-                  <div style={{ 
+                  <div className="button-container-mobile" style={{ 
                     display: 'flex', 
                     justifyContent: 'space-between', 
                     alignItems: 'center', 
                     flexWrap: 'wrap', 
                     gap: '1rem' 
                   }}>
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <div className="button-group-mobile" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                       <button
                         onClick={() => applyToJob(job)}
                         className={`btn ${hasApplied ? 'btn-success' : 'btn-primary'}`}

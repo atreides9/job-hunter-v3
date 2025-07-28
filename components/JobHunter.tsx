@@ -735,6 +735,7 @@ const JobHunter = () => {
               return (
                 <div 
                   key={job.id} 
+                  className="job-card-mobile"
                   style={{
                     ...cardStyle,
                     borderRadius: '1rem', 
@@ -755,8 +756,8 @@ const JobHunter = () => {
                   }}
                   onClick={() => router.push(`/jobs/${job.id}`)}
                 >
-                  {/* Badge Container - Fixed positioning to prevent overlaps */}
-                  <div style={{
+                  {/* Badge Container - Responsive positioning */}
+                  <div className="badge-container" style={{
                     position: 'absolute',
                     top: '1rem',
                     right: '1rem',
@@ -813,8 +814,8 @@ const JobHunter = () => {
                       alignItems: 'flex-start',
                       gap: '1rem'
                     }}>
-                      {/* Job title - full display without ellipsis */}
-                      <h3 style={{ 
+                      {/* Job title - mobile responsive */}
+                      <h3 className="job-title" style={{ 
                         fontSize: '1.125rem',
                         fontWeight: '600', 
                         marginBottom: '0.5rem',
@@ -826,7 +827,7 @@ const JobHunter = () => {
                         overflow: 'visible',
                         textOverflow: 'initial',
                         whiteSpace: 'normal',
-                        paddingRight: '8rem' // Add padding to avoid overlap with badges
+                        paddingRight: '6rem' // Reduced padding for better mobile layout
                       }} 
                       dangerouslySetInnerHTML={{ __html: highlightKeywords(job.title) }} 
                       />
@@ -889,7 +890,7 @@ const JobHunter = () => {
                         )}
                       </div>
                       
-                      <div style={{ 
+                      <div className="company-info-mobile" style={{ 
                         display: 'flex', 
                         gap: '1rem', 
                         fontSize: '0.875rem', 
@@ -897,20 +898,24 @@ const JobHunter = () => {
                         marginBottom: '0.75rem', 
                         flexWrap: 'wrap' 
                       }}>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                          <Building size={14} /> {job.company.name}
-                        </span>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                          <MapPin size={14} /> {job.location}
-                        </span>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                          <Calendar size={14} /> {new Date(job.posted_date).toLocaleDateString('ko-KR')}
-                        </span>
-                        {job.deadline && (
+                        <div>
                           <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                            <Clock size={14} /> 마감: {new Date(job.deadline).toLocaleDateString('ko-KR')}
+                            <Building size={14} /> {job.company.name}
                           </span>
-                        )}
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                            <MapPin size={14} /> {job.location}
+                          </span>
+                        </div>
+                        <div>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                            <Calendar size={14} /> {new Date(job.posted_date).toLocaleDateString('ko-KR')}
+                          </span>
+                          {job.deadline && (
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                              <Clock size={14} /> 마감: {new Date(job.deadline).toLocaleDateString('ko-KR')}
+                            </span>
+                          )}
+                        </div>
                       </div>
 
                       <div style={{
@@ -976,14 +981,14 @@ const JobHunter = () => {
                   )}
 
 
-                  <div style={{ 
+                  <div className="button-container-mobile" style={{ 
                     display: 'flex', 
                     justifyContent: 'space-between', 
                     alignItems: 'center', 
                     flexWrap: 'wrap', 
                     gap: '1rem' 
                   }}>
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <div className="button-group-mobile" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                       <button
                         onClick={(e) => {
                           e.preventDefault()
@@ -1021,8 +1026,8 @@ const JobHunter = () => {
                       alignItems: 'flex-end',
                       gap: '0.25rem'
                     }}>
-                      <div>ID: {job.id}</div>
-                      <div>{job.employment_type}</div>
+                      <div>💰 급여정보</div>
+                      <div>{job.remote_available ? '원격가능' : '현장근무'}</div>
                     </div>
                   </div>
                 </div>

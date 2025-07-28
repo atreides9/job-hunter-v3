@@ -332,7 +332,7 @@
   background: var(--bg-tertiary);
 }
 
-/* Responsive Design */
+/* Mobile responsive styles */
 @media (max-width: 768px) {
   .header-content {
     padding: 0 12px;
@@ -353,8 +353,88 @@
   }
   
   .btn {
-    padding: 6px 12px;
+    padding: 8px 12px;
+    font-size: 14px;
+    min-height: 40px;
+  }
+  
+  /* Job card mobile improvements */
+  .job-card-mobile {
+    position: relative !important;
+  }
+  
+  .job-card-mobile .badge-container {
+    position: static !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+    margin-bottom: 0.75rem !important;
+    flex-wrap: wrap !important;
+    gap: 0.5rem !important;
+  }
+  
+  .job-card-mobile .job-title {
+    padding-right: 0 !important;
+    margin-bottom: 0.75rem !important;
+    font-size: 1.125rem !important;
+    line-height: 1.4 !important;
+  }
+  
+  /* Company info mobile layout */
+  .company-info-mobile {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+  
+  .company-info-mobile > div {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.75rem !important;
+  }
+  
+  /* Button container mobile */
+  .button-container-mobile {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    align-items: stretch !important;
+  }
+  
+  .button-group-mobile {
+    display: flex !important;
+    gap: 0.5rem !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .button-group-mobile .btn {
+    flex: 1 !important;
+    min-width: 120px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn {
+    padding: 6px 10px;
     font-size: 13px;
-    min-height: 28px;
+    min-height: 36px;
+  }
+  
+  .job-card-mobile .job-title {
+    font-size: 1rem !important;
+  }
+  
+  .company-info-mobile > div {
+    gap: 0.5rem !important;
+    font-size: 0.8125rem !important;
+  }
+  
+  .button-group-mobile {
+    flex-direction: column !important;
+  }
+  
+  .button-group-mobile .btn {
+    width: 100% !important;
+    flex: none !important;
   }
 }
