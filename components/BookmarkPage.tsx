@@ -395,10 +395,15 @@ const BookmarkPage: React.FC = () => {
                     <div className="button-group-mobile" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                       <button
                         onClick={() => applyToJob(job)}
-                        className={`btn ${hasApplied ? 'btn-success' : 'btn-primary'}`}
+                        className={`btn ${hasApplied ? 'btn-success' : 'btn-secondary'}`}
+                        style={{
+                          background: hasApplied ? 'var(--green)' : 'rgba(103, 80, 164, 0.08)',
+                          color: hasApplied ? 'white' : '#6750A4',
+                          border: hasApplied ? 'none' : '1px solid rgba(103, 80, 164, 0.2)'
+                        }}
                       >
                         <FileText size={16} />
-                        {hasApplied ? '지원완료' : '지원하기'}
+                        {hasApplied ? '지원완료' : '상세보기'}
                       </button>
 
                       <button
@@ -421,7 +426,6 @@ const BookmarkPage: React.FC = () => {
                       <div>💰 {job.salary_min && job.salary_max 
                         ? `${job.salary_min.toLocaleString()}만 - ${job.salary_max.toLocaleString()}만원`
                         : '협의'}</div>
-                      <div>ID: {job.id}</div>
                     </div>
                   </div>
                 </div>

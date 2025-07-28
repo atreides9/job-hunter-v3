@@ -332,24 +332,69 @@
   background: var(--bg-tertiary);
 }
 
+/* Mobile line breaks */
+.mobile-break {
+  display: none;
+}
+
+.feature-list-mobile {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
 /* Mobile responsive styles */
 @media (max-width: 768px) {
+  .mobile-break {
+    display: inline;
+  }
+  
+  .feature-list-mobile {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
   .header-content {
     padding: 0 12px;
     height: 56px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .header-content::-webkit-scrollbar {
+    display: none;
   }
   
   .nav-group {
     gap: 4px;
+    flex-shrink: 0;
   }
   
   .nav-primary {
-    gap: 8px;
+    gap: 6px;
+  }
+  
+  .nav-secondary {
+    gap: 4px;
   }
   
   .nav-item {
     padding: 4px 8px;
-    font-size: 13px;
+    font-size: 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: fit-content;
+  }
+  
+  .nav-item span {
+    display: inline;
+  }
+  
+  .nav-separator {
+    margin: 0 4px;
   }
   
   .btn {
@@ -411,9 +456,40 @@
     flex: 1 !important;
     min-width: 120px !important;
   }
+  
+  /* Badge sizing for mobile */
+  .badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 8px;
+  }
+  
+  /* Matched keyword badges in job cards */
+  .matched-keyword-badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
 }
 
 @media (max-width: 480px) {
+  .header-content {
+    height: 52px;
+    padding: 0 8px;
+  }
+  
+  .nav-item {
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+  
+  .nav-item .badge {
+    padding: 1px 4px;
+    font-size: 10px;
+    min-width: 16px;
+    height: 16px;
+  }
+  
   .btn {
     padding: 6px 10px;
     font-size: 13px;
@@ -436,5 +512,10 @@
   .button-group-mobile .btn {
     width: 100% !important;
     flex: none !important;
+  }
+  
+  /* Hide text on smallest screens, show only icons */
+  .nav-item span:not(.badge) {
+    display: none;
   }
 }

@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect } from 'react'
 import { useAppContext } from '@/contexts/AppContext'
 import { useRouter } from 'next/navigation'
 import Layout from './Layout'
-import { Search, Filter, Bell, Calendar, MapPin, Building, Percent, ChevronLeft, ChevronRight, Loader2, Plus, X, BellRing, BellOff, FileText, Clock, TrendingUp, Bookmark, BookmarkCheck, AlertTriangle, BarChart } from 'lucide-react'
+import { Search, Filter, Bell, Calendar, MapPin, Building, Percent, ChevronLeft, ChevronRight, Loader2, Plus, X, BellRing, BellOff, FileText, Clock, TrendingUp, Bookmark, BookmarkCheck, AlertTriangle } from 'lucide-react'
 
 // Mock 데이터
 const mockJobsData = [
@@ -147,7 +147,7 @@ const JobHunter = () => {
   const [filterScore, setFilterScore] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [showApplicationHistory, setShowApplicationHistory] = useState(false)
-  const [showInsights, setShowInsights] = useState(false)
+  const [showInsights] = useState(false)
   const [showKeywordSettings, setShowKeywordSettings] = useState(false)
   const [showApplicationPopup, setShowApplicationPopup] = useState(false)
   const [currentAppliedJob, setCurrentAppliedJob] = useState<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -444,23 +444,6 @@ const JobHunter = () => {
               <Search size={20} /> 관심 키워드 설정
             </h2>
             <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <button 
-                onClick={() => setShowInsights(!showInsights)} 
-                style={{ 
-                  background: 'rgba(103, 126, 234, 0.1)', 
-                  border: '1px solid #667eea', 
-                  color: '#667eea', 
-                  padding: '0.5rem 1rem', 
-                  borderRadius: '0.5rem', 
-                  cursor: 'pointer', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '0.5rem',
-                  fontSize: '0.875rem'
-                }}
-              >
-                <BarChart size={16} /> 인사이트
-              </button>
               <button 
                 onClick={() => setShowKeywordSettings(!showKeywordSettings)} 
                 style={{ 
@@ -1572,21 +1555,23 @@ const JobHunter = () => {
               marginBottom: '1rem', 
               color: theme.textSecondary 
             }}>
-              북마크, 이력서관리, 지원현황 페이지가 추가되었습니다!
+              키워드별 알림 설정,<br className="mobile-break"/>
+              지원 이력 자동 저장,<br className="mobile-break"/>
+              다크모드 기능 추가!
             </p>
-            <div style={{ 
+            <div className="feature-list-mobile" style={{ 
               display: 'flex', 
               justifyContent: 'center', 
-              gap: '2rem', 
+              gap: '1rem', 
               fontSize: '0.8rem', 
               color: theme.textSecondary,
               flexWrap: 'wrap'
             }}>
-              <span>🔖 북마크 관리</span>
-              <span>📄 이력서 업로드</span>
-              <span>📊 지원현황 추적</span>
+              <span>🔔 키워드별 알림</span>
+              <span>💾 지원이력 자동저장</span>
+              <span>📅 마감임박 알림</span>
               <span>🌙 다크모드</span>
-              <span>💾 데이터 자동저장</span>
+              <span>📊 취업활동 인사이트</span>
             </div>
           </div>
         </footer>
