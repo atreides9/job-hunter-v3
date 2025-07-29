@@ -304,7 +304,7 @@ const JobHunter = () => {
       }}>
         <Loader2 size={48} style={{ animation: 'spin 1s linear infinite' }} />
         <div style={{ fontSize: '1.5rem' }}>Job Hunter v3.0 로딩 중...</div>
-        <div style={{ fontSize: '0.875rem', color: '#94a3b8' }}>잊지마세요. 당신의 가능성은 무한합니다✨</div>
+        <div style={{ fontSize: '0.875rem', color: '#94a3b8' }}>잊지 마세요. 당신의 가능성은 무한합니다✨</div>
       </div>
     )
   }
@@ -1145,8 +1145,7 @@ const JobHunter = () => {
                   onClick={() => {
                     setShowApplicationPopup(false)
                     if (currentAppliedJob) {
-                      setSelectedJobForDetails(currentAppliedJob)
-                      setShowJobDetails(true)
+                      router.push(`/jobs/${currentAppliedJob.id}`)
                     }
                   }}
                   style={{

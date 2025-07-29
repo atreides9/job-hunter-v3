@@ -18,12 +18,7 @@ const Header: React.FC = () => {
     { path: '/bookmark', label: '북마크', icon: Bookmark, count: bookmarkedJobs.length },
     { path: '/resume', label: '이력서관리', icon: User },
   ]
-
   // Secondary navigation - user actions
-  const secondaryNavItems = [
-    { path: '/bookmark', label: '북마크', icon: Bookmark, count: bookmarkedJobs.length },
-    { path: '/resume', label: '이력서관리', icon: User },
-  ]
 
   interface NavItemType {
     path: string;
@@ -81,20 +76,6 @@ const Header: React.FC = () => {
           {/* Primary Navigation */}
           <nav className="nav-group nav-primary">
             {primaryNavItems.map((item) => (
-              <NavItem 
-                key={item.path} 
-                item={item} 
-                isActive={pathname === item.path} 
-              />
-            ))}
-          </nav>
-
-          {/* Separator */}
-          <div className="nav-separator" />
-
-          {/* Secondary Navigation */}
-          <nav className="nav-group nav-secondary">
-            {secondaryNavItems.map((item) => (
               <NavItem 
                 key={item.path} 
                 item={item} 
