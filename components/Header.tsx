@@ -13,8 +13,10 @@ const Header: React.FC = () => {
   // Primary navigation - main app sections
   const primaryNavItems = [
     { path: '/', label: '홈', icon: Home },
-    { path: '/applications', label: '지원이력', icon: BarChart, count: applicationHistory.length },
+    { path: '/applications', label: '지원현황', icon: BarChart, count: applicationHistory.length },
     { path: '/insights', label: '인사이트', icon: TrendingUp },
+    { path: '/bookmark', label: '북마크', icon: Bookmark, count: bookmarkedJobs.length },
+    { path: '/resume', label: '이력서관리', icon: User },
   ]
 
   // Secondary navigation - user actions
@@ -65,9 +67,10 @@ const Header: React.FC = () => {
             display: 'flex', 
             alignItems: 'center', 
             gap: '8px',
-            fontSize: '20px',
+            fontSize: 'clamp(16px, 4vw, 20px)',
             fontWeight: '700',
-            color: 'var(--text-primary)'
+            color: 'var(--text-primary)',
+            whiteSpace: 'nowrap'
           }}>
             🎯 Job Hunter
           </div>

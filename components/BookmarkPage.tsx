@@ -277,25 +277,30 @@ const BookmarkPage: React.FC = () => {
               const hasApplied = applicationHistory.some(app => app.jobId === job.id)
               const daysUntilDeadline = job.deadline ? Math.ceil((new Date(job.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : null
               
+              // Dynamic className based on match score
+              const getJobCardClass = (matchScore: number) => {
+                if (matchScore >= 75) return 'job-card-excellent'
+                if (matchScore >= 50) return 'job-card-good'
+                if (matchScore >= 25) return 'job-card-fair'
+                return 'job-card-poor'
+              }
+              
               return (
                 <div 
                   key={job.id}
-                  className="job-card-mobile"
+                  className={`job-card-mobile ${getJobCardClass(job.matchScore)}`}
                   style={{
-                    background: theme.cardBg,
-                    border: `1px solid ${theme.border}`,
                     borderRadius: '1rem',
                     padding: '1.5rem',
-                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
                     transition: 'all 0.2s ease'
                   }}
                   onMouseOver={(e) => {
                     e.currentTarget.style.transform = 'translateY(-2px)'
-                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)'
+                    e.currentTarget.style.boxShadow = '0 12px 35px rgba(0, 0, 0, 0.15)'
                   }}
                   onMouseOut={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)'
+                    e.currentTarget.style.boxShadow = ''
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
@@ -405,7 +410,7 @@ const BookmarkPage: React.FC = () => {
                         }}
                       >
                         <FileText size={16} />
-                        {hasApplied ? '지원완료' : '상세보기'}
+                        {hasApplied ? '지원완료' : '지원하기'}
                       </button>
 
                       <button

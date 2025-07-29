@@ -304,7 +304,7 @@ const JobHunter = () => {
       }}>
         <Loader2 size={48} style={{ animation: 'spin 1s linear infinite' }} />
         <div style={{ fontSize: '1.5rem' }}>Job Hunter v3.0 로딩 중...</div>
-        <div style={{ fontSize: '0.875rem', color: '#94a3b8' }}>새로운 기능들과 함께 돌아왔어요! ✨</div>
+        <div style={{ fontSize: '0.875rem', color: '#94a3b8' }}>잊지마세요. 당신의 가능성은 무한합니다✨</div>
       </div>
     )
   }
@@ -701,26 +701,19 @@ const JobHunter = () => {
               const hasApplied = applicationHistory.some(app => app.jobId === job.id)
               const daysUntilDeadline = job.deadline ? Math.ceil((new Date(job.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : null
               
-              const cardStyle = job.matchScore >= 70 ? {
-                background: darkMode ? 'linear-gradient(135deg, #064e3b 0%, #065f46 100%)' : 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
-                border: '2px solid #10b981',
-                boxShadow: darkMode 
-                  ? '0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 2px #10b981' 
-                  : '0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 2px #10b981'
-              } : {
-                background: theme.cardBg,
-                border: darkMode ? `2px solid ${theme.border}` : `1px solid ${theme.border}`,
-                boxShadow: darkMode 
-                  ? '0 8px 25px rgba(0, 0, 0, 0.25)' 
-                  : '0 4px 15px rgba(0, 0, 0, 0.08)'
+              // Dynamic className based on match score
+              const getJobCardClass = (matchScore: number) => {
+                if (matchScore >= 75) return 'job-card-excellent'
+                if (matchScore >= 50) return 'job-card-good'
+                if (matchScore >= 25) return 'job-card-fair'
+                return 'job-card-poor'
               }
               
               return (
                 <div 
                   key={job.id} 
-                  className="job-card-mobile"
+                  className={`job-card-mobile ${getJobCardClass(job.matchScore)}`}
                   style={{
-                    ...cardStyle,
                     borderRadius: '1rem', 
                     padding: '1.5rem', 
                     position: 'relative',
@@ -735,7 +728,7 @@ const JobHunter = () => {
                   }}
                   onMouseOut={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.boxShadow = cardStyle.boxShadow
+                    e.currentTarget.style.boxShadow = ''
                   }}
                   onClick={() => router.push(`/jobs/${job.id}`)}
                 >

@@ -1,10 +1,10 @@
 /* Apple Design System Theme */
 :root {
   /* Light Mode Colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f2f2f7;
+  --bg-primary: #eff6ff;
+  --bg-secondary: #dbeafe;
   --bg-tertiary: #ffffff;
-  --bg-grouped: #f2f2f7;
+  --bg-grouped: #f0f9ff;
   
   --text-primary: #000000;
   --text-secondary: rgba(60, 60, 67, 0.6);
@@ -71,7 +71,7 @@
 
 /* Apple Button System */
 .btn {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   border: none;
   border-radius: 8px;
   font-size: 14px;
@@ -93,13 +93,13 @@
 .btn-primary {
   background: var(--blue);
   color: white;
-  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary:hover {
   background: #0056CC;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .btn-primary:active {
@@ -110,11 +110,13 @@
 .btn-secondary {
   background: var(--fill-tertiary);
   color: var(--blue);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 .btn-secondary:hover {
   background: var(--fill-secondary);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1), 0 3px 8px rgba(0, 0, 0, 0.06);
 }
 
 .btn-secondary:active {
@@ -158,7 +160,7 @@
 
 /* Apple Badge System */
 .badge {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   border-radius: 12px;
   padding: 4px 8px;
   font-size: 12px;
@@ -209,22 +211,65 @@
 .card {
   background: var(--bg-tertiary);
   border-radius: 12px;
-  border: 1px solid var(--separator);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
 }
 
+/* Job Card Match Score Dynamic Backgrounds */
+.job-card-excellent {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid #10b981;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 0 2px #10b981;
+}
+
+:root[data-theme="dark"] .job-card-excellent {
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 2px #10b981;
+}
+
+.job-card-good {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border: 2px solid #3b82f6;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12), 0 0 0 1px #3b82f6;
+}
+
+:root[data-theme="dark"] .job-card-good {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25), 0 0 0 1px #3b82f6;
+}
+
+.job-card-fair {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 2px solid #f59e0b;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1), 0 0 0 1px #f59e0b;
+}
+
+:root[data-theme="dark"] .job-card-fair {
+  background: linear-gradient(135deg, #92400e 0%, #b45309 100%);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), 0 0 0 1px #f59e0b;
+}
+
+.job-card-poor {
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+:root[data-theme="dark"] .job-card-poor {
+  background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
 :root[data-theme="dark"] .card {
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3), 0 3px 12px rgba(0, 0, 0, 0.2);
 }
 
 :root[data-theme="dark"] .card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .card-interactive {
@@ -291,6 +336,7 @@
   gap: 6px;
   text-decoration: none;
   position: relative;
+  white-space: nowrap;
 }
 
 .nav-item:hover {
