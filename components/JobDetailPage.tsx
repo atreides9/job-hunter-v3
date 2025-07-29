@@ -99,10 +99,6 @@ const JobDetailPage: React.FC<JobDetailPageProps> = ({ jobId }) => {
     
     addApplication(application)
     setShowApplicationModal(false)
-    
-    setTimeout(() => {
-      alert('지원이 완료되었습니다!')
-    }, 100)
   }
 
   const daysUntilDeadline = job.deadline ? 
@@ -183,14 +179,13 @@ const JobDetailPage: React.FC<JobDetailPageProps> = ({ jobId }) => {
               </div>
             </div>
             
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               <button
                 onClick={() => toggleBookmark(job.id)}
                 className={`btn ${isBookmarked ? 'btn-secondary' : 'btn-secondary'}`}
                 style={{
                   background: isBookmarked ? 'var(--orange)' : 'var(--fill-tertiary)',
                   color: isBookmarked ? 'white' : 'var(--blue)',
-                  border: `1px solid ${isBookmarked ? 'var(--orange)' : 'var(--fill-secondary)'}`,
                   padding: '0.75rem'
                 }}
               >

@@ -394,12 +394,14 @@ const BookmarkPage: React.FC = () => {
                   }}>
                     <div className="button-group-mobile" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                       <button
-                        onClick={() => applyToJob(job)}
+                        onClick={() => hasApplied ? null : applyToJob(job)}
+                        disabled={hasApplied}
                         className={`btn ${hasApplied ? 'btn-success' : 'btn-secondary'}`}
                         style={{
                           background: hasApplied ? 'var(--green)' : 'rgba(103, 80, 164, 0.08)',
                           color: hasApplied ? 'white' : '#6750A4',
-                          border: hasApplied ? 'none' : '1px solid rgba(103, 80, 164, 0.2)'
+                          opacity: hasApplied ? 0.6 : 1,
+                          cursor: hasApplied ? 'not-allowed' : 'pointer'
                         }}
                       >
                         <FileText size={16} />

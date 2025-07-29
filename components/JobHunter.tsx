@@ -992,8 +992,7 @@ const JobHunter = () => {
                         className={`btn ${isBookmarked ? 'btn-secondary' : 'btn-secondary'}`}
                         style={{
                           background: isBookmarked ? 'var(--orange)' : 'var(--fill-tertiary)',
-                          color: isBookmarked ? 'white' : 'var(--blue)',
-                          border: `1px solid ${isBookmarked ? 'var(--orange)' : 'var(--fill-secondary)'}`
+                          color: isBookmarked ? 'white' : 'var(--blue)'
                         }}
                       >
                         {isBookmarked ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
@@ -1052,7 +1051,7 @@ const JobHunter = () => {
               <ChevronLeft size={16} /> 이전
             </button>
 
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                 <button
                   key={page}

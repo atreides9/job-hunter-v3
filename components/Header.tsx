@@ -70,14 +70,6 @@ const Header: React.FC = () => {
             color: 'var(--text-primary)'
           }}>
             🎯 Job Hunter
-            <span style={{ 
-              fontSize: '11px', 
-              opacity: 0.6, 
-              background: 'var(--fill-tertiary)', 
-              padding: '2px 6px', 
-              borderRadius: '4px',
-              fontWeight: '500'
-            }}>v3.0</span>
           </div>
         </Link>
         
