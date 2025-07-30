@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "../styles/apple-theme.css";
 import { AppProvider } from "@/contexts/AppContext";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,9 +30,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AppProvider>
-          {children}
-        </AppProvider>
+        <ErrorBoundary>
+          <AppProvider>
+            {children}
+          </AppProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );
