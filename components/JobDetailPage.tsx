@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useAppContext } from '@/contexts/AppContext'
+import { useJobsContext, useUserPreferencesContext, useApplicationsContext } from '@/contexts/AppContext'
 import { useRouter } from 'next/navigation'
 import Layout from './Layout'
 import { 
@@ -15,14 +15,9 @@ interface JobDetailPageProps {
 }
 
 const JobDetailPage: React.FC<JobDetailPageProps> = ({ jobId }) => {
-  const { 
-    jobs, 
-    bookmarkedJobs, 
-    toggleBookmark, 
-    applicationHistory, 
-    addApplication,
-    darkMode 
-  } = useAppContext()
+  const { jobs } = useJobsContext()
+  const { bookmarkedJobs, toggleBookmark, darkMode } = useUserPreferencesContext()
+  const { applicationHistory, addApplication } = useApplicationsContext()
   
   const router = useRouter()
   const [showApplicationModal, setShowApplicationModal] = useState(false)

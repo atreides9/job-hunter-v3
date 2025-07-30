@@ -3,12 +3,13 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useAppContext } from '@/contexts/AppContext'
+import { useUserPreferencesContext, useApplicationsContext } from '@/contexts/AppContext'
 import { Moon, Sun, BarChart, Bookmark, User, Home, TrendingUp } from 'lucide-react'
 
 const Header: React.FC = () => {
   const pathname = usePathname()
-  const { darkMode, setDarkMode, applicationHistory, bookmarkedJobs } = useAppContext()
+  const { darkMode, setDarkMode, bookmarkedJobs } = useUserPreferencesContext()
+  const { applicationHistory } = useApplicationsContext()
 
   // Primary navigation - main app sections
   const primaryNavItems = [

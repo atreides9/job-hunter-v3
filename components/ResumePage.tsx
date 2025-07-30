@@ -1,12 +1,13 @@
 'use client'
 
 import React, { useState, useRef } from 'react'
-import { useAppContext } from '@/contexts/AppContext'
+import { useUserPreferencesContext, useApplicationsContext } from '@/contexts/AppContext'
 import Layout from './Layout'
 import { User, Upload, FileText, Download, Trash2, Star, Plus, Calendar, File } from 'lucide-react'
 
 const ResumePage: React.FC = () => {
-  const { resumes, addResume, deleteResume, darkMode } = useAppContext()
+  const { darkMode } = useUserPreferencesContext()
+  const { resumes, addResume, deleteResume } = useApplicationsContext()
   const [dragOver, setDragOver] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 

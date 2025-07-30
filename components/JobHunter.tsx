@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { useAppContext } from '@/contexts/AppContext'
+import { useJobsContext, useUserPreferencesContext, useApplicationsContext } from '@/contexts/AppContext'
 import { useRouter } from 'next/navigation'
 import Layout from './Layout'
 import { Search, Filter, Bell, Calendar, MapPin, Building, Percent, ChevronLeft, ChevronRight, Loader2, Plus, X, BellRing, BellOff, FileText, Clock, TrendingUp, Bookmark, BookmarkCheck, AlertTriangle } from 'lucide-react'
@@ -122,17 +122,9 @@ const mockJobsData = [
 ]
 
 const JobHunter = () => {
-  const {
-    jobs,
-    setJobs,
-    userKeywords,
-    setUserKeywords,
-    bookmarkedJobs,
-    toggleBookmark,
-    applicationHistory,
-    addApplication,
-    darkMode
-  } = useAppContext()
+  const { jobs, setJobs, userKeywords, setUserKeywords } = useJobsContext()
+  const { bookmarkedJobs, toggleBookmark, darkMode } = useUserPreferencesContext()
+  const { applicationHistory, addApplication } = useApplicationsContext()
 
   const router = useRouter()
 

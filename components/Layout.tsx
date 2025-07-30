@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect } from 'react'
-import { useAppContext } from '@/contexts/AppContext'
+import { useUserPreferencesContext } from '@/contexts/AppContext'
 import Header from './Header'
 
 interface LayoutProps {
@@ -9,7 +9,7 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const { darkMode } = useAppContext()
+  const { darkMode } = useUserPreferencesContext()
 
   // Apply theme attribute to root element
   useEffect(() => {

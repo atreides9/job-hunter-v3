@@ -1,16 +1,14 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
-import { useAppContext } from '@/contexts/AppContext'
+import { useJobsContext, useUserPreferencesContext, useApplicationsContext } from '@/contexts/AppContext'
 import Layout from './Layout'
 import { BarChart, Building, MapPin, Calendar, Clock, Filter, Search, Eye, Edit } from 'lucide-react'
 
 const ApplicationsPage: React.FC = () => {
-  const { 
-    jobs, 
-    applicationHistory, 
-    darkMode 
-  } = useAppContext()
+  const { jobs } = useJobsContext()
+  const { darkMode } = useUserPreferencesContext()
+  const { applicationHistory } = useApplicationsContext()
   
   const [sortBy, setSortBy] = useState('appliedAt')
   const [filterStatus, setFilterStatus] = useState('all')

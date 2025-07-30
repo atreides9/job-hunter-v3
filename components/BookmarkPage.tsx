@@ -1,20 +1,14 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
-import { useAppContext } from '@/contexts/AppContext'
+import { useJobsContext, useUserPreferencesContext, useApplicationsContext } from '@/contexts/AppContext'
 import Layout from './Layout'
 import { Building, MapPin, Calendar, Clock, Percent, Bookmark, FileText, Trash2, CheckCircle, CircleDot } from 'lucide-react'
 
 const BookmarkPage: React.FC = () => {
-  const { 
-    jobs, 
-    bookmarkedJobs, 
-    toggleBookmark, 
-    darkMode, 
-    userKeywords,
-    addApplication,
-    applicationHistory 
-  } = useAppContext()
+  const { jobs, userKeywords } = useJobsContext()
+  const { bookmarkedJobs, toggleBookmark, darkMode } = useUserPreferencesContext()
+  const { addApplication, applicationHistory } = useApplicationsContext()
   
   const [sortBy, setSortBy] = useState('posted_date')
   const [filterStatus, setFilterStatus] = useState('all')
