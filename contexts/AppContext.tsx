@@ -1,6 +1,7 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { debounce } from 'lodash-es'
 
 // Type definitions
 interface CompanyInfo {
@@ -167,36 +168,40 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [])
 
+  // Debounced localStorage operations for performance
+  const debouncedSaveToStorage = useCallback(
+    debounce((key: string, data: any) => {
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem(key, JSON.stringify(data))
+        } catch (error) {
+          console.warn(`Failed to save ${key} to localStorage:`, error)
+        }
+      }
+    }, 500),
+    []
+  )
+
   // Save data to localStorage when state changes
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('job-hunter-bookmarks', JSON.stringify(bookmarkedJobs))
-    }
-  }, [bookmarkedJobs])
+    debouncedSaveToStorage('job-hunter-bookmarks', bookmarkedJobs)
+  }, [bookmarkedJobs, debouncedSaveToStorage])
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('job-hunter-applications', JSON.stringify(applicationHistory))
-    }
-  }, [applicationHistory])
+    debouncedSaveToStorage('job-hunter-applications', applicationHistory)
+  }, [applicationHistory, debouncedSaveToStorage])
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('job-hunter-notes', JSON.stringify(jobNotes))
-    }
-  }, [jobNotes])
+    debouncedSaveToStorage('job-hunter-notes', jobNotes)
+  }, [jobNotes, debouncedSaveToStorage])
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('job-hunter-dark-mode', JSON.stringify(darkMode))
-    }
-  }, [darkMode])
+    debouncedSaveToStorage('job-hunter-dark-mode', darkMode)
+  }, [darkMode, debouncedSaveToStorage])
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('job-hunter-resumes', JSON.stringify(resumes))
-    }
-  }, [resumes])
+    debouncedSaveToStorage('job-hunter-resumes', resumes)
+  }, [resumes, debouncedSaveToStorage])
 
   const value: AppContextType = {
     jobs,

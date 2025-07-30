@@ -179,15 +179,25 @@ const JobHunter = () => {
     }
   }, [mounted, setJobs])
 
-  // 키워드 매칭 계산
+  // 키워드 매칭 계산 - 메모이제이션으로 성능 최적화
   const processedJobs = useMemo(() => {
+    if (!jobs?.length || !userKeywords?.length) {
+      return jobs?.map(job => ({ ...job, matchedKeywords: [], matchScore: 0 })) || []
+    }
+    
+    // 키워드를 미리 소문자로 변환하여 반복 계산 방지
+    const lowerKeywords = userKeywords.map(k => k.toLowerCase())
+    
     return jobs.map(job => {
       const allText = `${job.title} ${job.description} ${job.keywords.join(' ')}`.toLowerCase()
-      const matchedKeywords = userKeywords.filter(keyword => 
-        allText.includes(keyword.toLowerCase())
+      
+      // Set을 사용하여 중복 매칭 방지 및 O(1) 검색
+      const textWords = new Set(allText.split(/\s+/))
+      const matchedKeywords = lowerKeywords.filter(keyword => 
+        textWords.has(keyword) || allText.includes(keyword)
       )
-      const matchScore = userKeywords.length > 0 ? 
-        Math.round((matchedKeywords.length / userKeywords.length) * 100) : 0
+      
+      const matchScore = Math.round((matchedKeywords.length / userKeywords.length) * 100)
       
       return { ...job, matchedKeywords, matchScore }
     })
@@ -262,16 +272,20 @@ const JobHunter = () => {
   }
 
 
-  // 하이라이팅
-  const highlightKeywords = (text: string) => {
-    if (!userKeywords.length) return text
-    let highlightedText = text
-    userKeywords.forEach(keyword => {
-      const regex = new RegExp(`(${keyword})`, 'gi')
-      highlightedText = highlightedText.replace(regex, '<mark style="background: linear-gradient(120deg, #fef08a 0%, #fde047 100%); padding: 3px 6px; border-radius: 4px; font-weight: 600;">$1</mark>')
-    })
-    return highlightedText
-  }
+  // 하이라이팅 - O(n²) → O(n) 최적화
+  const highlightKeywords = useMemo(() => {
+    if (!userKeywords.length) return (text: string) => text
+    
+    // 모든 키워드를 하나의 정규식으로 결합 (성능 최적화)
+    const escapedKeywords = userKeywords.map(keyword => 
+      keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    )
+    const combinedRegex = new RegExp(`(${escapedKeywords.join('|')})`, 'gi')
+    
+    return (text: string) => {
+      return text.replace(combinedRegex, '<mark style="background: linear-gradient(120deg, #fef08a 0%, #fde047 100%); padding: 3px 6px; border-radius: 4px; font-weight: 600;">$1</mark>')
+    }
+  }, [userKeywords])
 
   // 통계
   const stats = {
