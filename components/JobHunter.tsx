@@ -4,7 +4,9 @@ import React, { useState, useMemo, useEffect } from 'react'
 import { useJobsContext, useUserPreferencesContext, useApplicationsContext } from '@/contexts/AppContext'
 import { useRouter } from 'next/navigation'
 import Layout from './Layout'
-import { Search, Filter, Bell, Calendar, MapPin, Building, Percent, ChevronLeft, ChevronRight, Loader2, Plus, X, BellRing, BellOff, FileText, Clock, TrendingUp, Bookmark, BookmarkCheck, AlertTriangle } from 'lucide-react'
+import VirtualizedJobList from './VirtualizedJobList'
+import { Search, Filter, Bell, Calendar, MapPin, Building, Loader2, Plus, X, BellRing, BellOff, FileText, Clock, TrendingUp, AlertTriangle } from 'lucide-react'
+import { useOptimizedJobData } from '@/hooks/useOptimizedJobData'
 
 // Mock 데이터
 const mockJobsData = [
@@ -123,8 +125,9 @@ const mockJobsData = [
 
 const JobHunter = () => {
   const { jobs, setJobs, userKeywords, setUserKeywords } = useJobsContext()
-  const { bookmarkedJobs, toggleBookmark, darkMode } = useUserPreferencesContext()
+  const { bookmarkedJobs, darkMode } = useUserPreferencesContext()
   const { applicationHistory, addApplication } = useApplicationsContext()
+  const { processedJobs, urgentJobs, stats, highlightKeywords } = useOptimizedJobData()
 
   const router = useRouter()
 
@@ -137,7 +140,7 @@ const JobHunter = () => {
   const [newKeyword, setNewKeyword] = useState('')
   const [sortBy, setSortBy] = useState('posted_date')
   const [filterScore, setFilterScore] = useState(0)
-  const [currentPage, setCurrentPage] = useState(1)
+  // Removed currentPage state - virtualization handles scrolling
   const [showApplicationHistory, setShowApplicationHistory] = useState(false)
   const [showInsights] = useState(false)
   const [showKeywordSettings, setShowKeywordSettings] = useState(false)
@@ -145,7 +148,7 @@ const JobHunter = () => {
   const [currentAppliedJob, setCurrentAppliedJob] = useState<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
   const [showJobDetails, setShowJobDetails] = useState(false)
   const [selectedJobForDetails, setSelectedJobForDetails] = useState<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
-  const jobsPerPage = 3
+  // Removed jobsPerPage - virtualization handles display
 
   // Using CSS variables from Apple Design System
   const theme = {
@@ -171,38 +174,7 @@ const JobHunter = () => {
     }
   }, [mounted, setJobs])
 
-  // 키워드 매칭 계산 - 메모이제이션으로 성능 최적화
-  const processedJobs = useMemo(() => {
-    if (!jobs?.length || !userKeywords?.length) {
-      return jobs?.map(job => ({ ...job, matchedKeywords: [], matchScore: 0 })) || []
-    }
-    
-    // 키워드를 미리 소문자로 변환하여 반복 계산 방지
-    const lowerKeywords = userKeywords.map(k => k.toLowerCase())
-    
-    return jobs.map(job => {
-      const allText = `${job.title} ${job.description} ${job.keywords.join(' ')}`.toLowerCase()
-      
-      // Set을 사용하여 중복 매칭 방지 및 O(1) 검색
-      const textWords = new Set(allText.split(/\s+/))
-      const matchedKeywords = lowerKeywords.filter(keyword => 
-        textWords.has(keyword) || allText.includes(keyword)
-      )
-      
-      const matchScore = Math.round((matchedKeywords.length / userKeywords.length) * 100)
-      
-      return { ...job, matchedKeywords, matchScore }
-    })
-  }, [jobs, userKeywords])
-
-  // 마감 임박 공고
-  const urgentJobs = processedJobs.filter(job => {
-    if (!job.deadline) return false
-    const today = new Date()
-    const deadline = new Date(job.deadline)
-    const diffDays = Math.ceil((deadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-    return diffDays <= 3 && diffDays >= 0
-  })
+  // Using data from useOptimizedJobData hook (removed duplicate calculations)
 
   // 필터링 및 정렬
   const filteredJobs = useMemo(() => {
@@ -222,11 +194,7 @@ const JobHunter = () => {
     })
   }, [processedJobs, sortBy, filterScore])
 
-  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage)
-  const paginatedJobs = filteredJobs.slice(
-    (currentPage - 1) * jobsPerPage,
-    currentPage * jobsPerPage
-  )
+  // Removed pagination logic - using VirtualizedJobList
 
   // 키워드 추가
   const addKeyword = () => {
@@ -264,30 +232,7 @@ const JobHunter = () => {
   }
 
 
-  // 하이라이팅 - O(n²) → O(n) 최적화
-  const highlightKeywords = useMemo(() => {
-    if (!userKeywords.length) return (text: string) => text
-    
-    // 모든 키워드를 하나의 정규식으로 결합 (성능 최적화)
-    const escapedKeywords = userKeywords.map(keyword => 
-      keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    )
-    const combinedRegex = new RegExp(`(${escapedKeywords.join('|')})`, 'gi')
-    
-    return (text: string) => {
-      return text.replace(combinedRegex, '<mark style="background: linear-gradient(120deg, #fef08a 0%, #fde047 100%); padding: 3px 6px; border-radius: 4px; font-weight: 600;">$1</mark>')
-    }
-  }, [userKeywords])
-
-  // 통계
-  const stats = {
-    totalJobs: processedJobs.length,
-    matchedJobs: processedJobs.filter(job => job.matchScore > 0).length,
-    avgMatchScore: processedJobs.length > 0 ? 
-      Math.round(processedJobs.reduce((sum, job) => sum + job.matchScore, 0) / processedJobs.length) : 0,
-    appliedJobs: applicationHistory.length,
-    urgentJobs: urgentJobs.length
-  }
+  // Using highlightKeywords and stats from useOptimizedJobData hook (removed duplicate calculations)
 
   // 인사이트
   const insights = [
@@ -683,416 +628,15 @@ const JobHunter = () => {
           </div>
         </div>
 
-        {/* 공고 카드 */}
-        <div style={{ display: 'grid', gap: '1.5rem', marginBottom: '2rem' }}>
-          {paginatedJobs.length === 0 ? (
-            <div style={{
-              background: theme.cardBg,
-              borderRadius: '1rem',
-              padding: '3rem',
-              textAlign: 'center',
-              border: `1px solid ${theme.border}`,
-              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
-            }}>
-              <div style={{ fontSize: '1.5rem', color: theme.textSecondary, marginBottom: '1rem' }}>
-                조건에 맞는 채용공고가 없습니다
-              </div>
-              <div style={{ color: theme.textSecondary }}>
-                키워드나 필터 조건을 변경해보세요
-              </div>
-            </div>
-          ) : (
-            paginatedJobs.map(job => {
-              const isBookmarked = bookmarkedJobs.includes(job.id)
-              const hasApplied = applicationHistory.some(app => app.jobId === job.id)
-              const daysUntilDeadline = job.deadline ? Math.ceil((new Date(job.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : null
-              
-              // Dynamic className based on match score
-              const getJobCardClass = (matchScore: number) => {
-                if (matchScore >= 75) return 'job-card-excellent'
-                if (matchScore >= 50) return 'job-card-good'
-                if (matchScore >= 25) return 'job-card-fair'
-                return 'job-card-poor'
-              }
-              
-              return (
-                <div 
-                  key={job.id} 
-                  className={`job-card-mobile ${getJobCardClass(job.matchScore)}`}
-                  style={{
-                    borderRadius: '1rem', 
-                    padding: '1.5rem', 
-                    position: 'relative',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer'
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)'
-                    e.currentTarget.style.boxShadow = darkMode 
-                      ? '0 12px 35px rgba(0, 0, 0, 0.4)' 
-                      : '0 12px 35px rgba(0, 0, 0, 0.15)'
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.boxShadow = ''
-                  }}
-                  onClick={() => router.push(`/jobs/${job.id}`)}
-                >
-                  {/* Badge Container - Responsive positioning */}
-                  <div className="badge-container" style={{
-                    position: 'absolute',
-                    top: '1rem',
-                    right: '1rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.5rem',
-                    alignItems: 'flex-end',
-                    zIndex: 2
-                  }}>
-                    {/* 마감 임박 배지 */}
-                    {daysUntilDeadline !== null && daysUntilDeadline <= 3 && daysUntilDeadline >= 0 && (
-                      <div style={{ 
-                        background: '#ef4444', 
-                        color: 'white', 
-                        padding: '0.25rem 0.75rem', 
-                        borderRadius: '1rem', 
-                        fontSize: '0.75rem', 
-                        fontWeight: '600', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '0.25rem',
-                        whiteSpace: 'nowrap'
-                      }}>
-                        <Clock size={12} /> D-{daysUntilDeadline}
-                      </div>
-                    )}
+        {/* 공고 목록 - VirtualizedJobList */}
+        <VirtualizedJobList
+          jobs={filteredJobs}
+          height={800}
+          onJobClick={(job) => router.push(`/jobs/${job.id}`)}
+          onApplyClick={applyToJob}
+        />
 
-                    {/* 높은 매칭률 배지 */}
-                    {job.matchScore >= 70 && (
-                      <div className="badge badge-excellent">
-                        ⭐ 높은 매칭률
-                      </div>
-                    )}
-
-                    {/* 매칭률 퍼센트 배지 - moved here to prevent overlap */}
-                    <div className={`badge ${
-                      job.matchScore >= 75 ? 'badge-excellent' : 
-                      job.matchScore >= 50 ? 'badge-good' : 
-                      job.matchScore >= 25 ? 'badge-fair' : 'badge-poor'
-                    }`}>
-                      <Percent size={12} /> {job.matchScore}%
-                    </div>
-                  </div>
-
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                    marginBottom: '1rem'
-                  }}>
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'flex-start',
-                      gap: '1rem'
-                    }}>
-                      {/* Job title - mobile responsive */}
-                      <h3 className="job-title" style={{ 
-                        fontSize: '1.125rem',
-                        fontWeight: '600', 
-                        marginBottom: '0.5rem',
-                        color: theme.text,
-                        lineHeight: 1.4,
-                        wordBreak: 'keep-all',
-                        flex: 1,
-                        minWidth: 0,
-                        overflow: 'visible',
-                        textOverflow: 'initial',
-                        whiteSpace: 'normal',
-                        paddingRight: '6rem' // Reduced padding for better mobile layout
-                      }} 
-                      dangerouslySetInnerHTML={{ __html: highlightKeywords(job.title) }} 
-                      />
-                    </div>
-                    
-                    <div>
-                      <div style={{
-                        display: 'flex',
-                        gap: '0.5rem',
-                        marginBottom: '0.75rem',
-                        flexWrap: 'wrap'
-                      }}>
-                        {job.remote_available && (
-                          <span style={{ 
-                            background: darkMode ? '#064e3b' : '#dcfce7', 
-                            color: darkMode ? '#34d399' : '#166534', 
-                            padding: '0.375rem 0.75rem', 
-                            borderRadius: '0.375rem', 
-                            fontSize: '0.813rem',
-                            fontWeight: '600',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.375rem',
-                            border: darkMode ? '1px solid #10b981' : 'none'
-                          }}>
-                            🏠 원격근무
-                          </span>
-                        )}
-                        {job.salary_max >= 6000 && (
-                          <span style={{ 
-                            background: darkMode ? '#3730a3' : '#e0e7ff', 
-                            color: darkMode ? '#a5b4fc' : '#4338ca', 
-                            padding: '0.375rem 0.75rem', 
-                            borderRadius: '0.375rem', 
-                            fontSize: '0.813rem',
-                            fontWeight: '600',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.375rem',
-                            border: darkMode ? '1px solid #6366f1' : 'none'
-                          }}>
-                            💰 고연봉
-                          </span>
-                        )}
-                        {job.employment_type === 'full-time' && (
-                          <span style={{ 
-                            background: darkMode ? '#7c2d12' : '#fee2e2', 
-                            color: darkMode ? '#fca5a5' : '#dc2626', 
-                            padding: '0.375rem 0.75rem', 
-                            borderRadius: '0.375rem', 
-                            fontSize: '0.813rem',
-                            fontWeight: '600',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.375rem',
-                            border: darkMode ? '1px solid #ef4444' : 'none'
-                          }}>
-                            ⏰ 정규직
-                          </span>
-                        )}
-                      </div>
-                      
-                      <div className="company-info-mobile" style={{ 
-                        display: 'flex', 
-                        gap: '1rem', 
-                        fontSize: '0.875rem', 
-                        color: theme.textSecondary, 
-                        marginBottom: '0.75rem', 
-                        flexWrap: 'wrap' 
-                      }}>
-                        <div>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                            <Building size={14} /> {job.company.name}
-                          </span>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                            <MapPin size={14} /> {job.location}
-                          </span>
-                        </div>
-                        <div>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                            <Calendar size={14} /> {new Date(job.posted_date).toLocaleDateString('ko-KR')}
-                          </span>
-                          {job.deadline && (
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                              <Clock size={14} /> 마감: {new Date(job.deadline).toLocaleDateString('ko-KR')}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      <div style={{
-                        fontSize: '0.875rem',
-                        color: theme.textSecondary,
-                        marginBottom: '0.5rem'
-                      }}>
-                        💰 급여: {job.salary_min && job.salary_max 
-                          ? `${job.salary_min.toLocaleString()}만 - ${job.salary_max.toLocaleString()}만원`
-                          : '협의'}
-                      </div>
-                    </div>
-                  </div>
-
-                  <p style={{ 
-                    color: theme.textSecondary, 
-                    lineHeight: 1.6, 
-                    marginBottom: '1rem' 
-                  }} 
-                  dangerouslySetInnerHTML={{ __html: highlightKeywords(job.description) }} 
-                  />
-
-                  {job.matchedKeywords?.length > 0 && (
-                    <div style={{ marginBottom: '1rem' }}>
-                      <div style={{ 
-                        fontSize: '0.75rem', 
-                        color: theme.textSecondary, 
-                        marginBottom: '0.5rem',
-                        fontWeight: '500'
-                      }}>
-                        매칭된 키워드:
-                      </div>
-                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                        {job.matchedKeywords.map(keyword => (
-                          <span 
-                            key={keyword}
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setUserKeywords([keyword])
-                              setCurrentPage(1)
-                            }}
-                            style={{ 
-                              background: '#10b981', 
-                              color: 'white', 
-                              padding: '0.25rem 0.75rem', 
-                              borderRadius: '1rem', 
-                              fontSize: '0.75rem', 
-                              fontWeight: '500',
-                              cursor: 'pointer',
-                              transition: 'all 0.2s ease',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '0.25rem'
-                            }}
-                            onMouseOver={(e) => (e.target as HTMLElement).style.backgroundColor = '#059669'}
-                            onMouseOut={(e) => (e.target as HTMLElement).style.backgroundColor = '#10b981'}
-                          >
-                            🔍 {keyword}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-
-                  <div className="button-container-mobile" style={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'center', 
-                    flexWrap: 'wrap', 
-                    gap: '1rem' 
-                  }}>
-                    <div className="button-group-mobile" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                          applyToJob(job)
-                        }}
-                        className={`btn ${hasApplied ? 'btn-success' : 'btn-primary'}`}
-                      >
-                        {hasApplied ? <BookmarkCheck size={16} /> : <FileText size={16} />}
-                        {hasApplied ? '지원완료' : '지원하기'}
-                      </button>
-
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          toggleBookmark(job.id)
-                        }}
-                        className={`btn ${isBookmarked ? 'btn-secondary' : 'btn-secondary'}`}
-                        style={{
-                          background: isBookmarked ? 'var(--orange)' : 'var(--fill-tertiary)',
-                          color: isBookmarked ? 'white' : 'var(--blue)'
-                        }}
-                      >
-                        {isBookmarked ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
-                        {isBookmarked ? '북마크됨' : '북마크'}
-                      </button>
-                    </div>
-
-                    <div style={{ 
-                      fontSize: '0.75rem', 
-                      color: theme.textSecondary,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-end',
-                      gap: '0.25rem'
-                    }}>
-                      <div>💰 급여정보</div>
-                      <div>{job.remote_available ? '원격가능' : '현장근무'}</div>
-                    </div>
-                  </div>
-                </div>
-              )
-            })
-          )}
-        </div>
-
-        {/* 페이지네이션 */}
-        {totalPages > 1 && (
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            gap: '1rem', 
-            background: theme.cardBg, 
-            padding: '1rem', 
-            borderRadius: '1rem', 
-            border: `1px solid ${theme.border}`,
-            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
-          }}>
-            <button
-              onClick={() => setCurrentPage(currentPage - 1)}
-              disabled={currentPage === 1}
-              style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '0.5rem', 
-                padding: '0.5rem 1rem', 
-                border: `1px solid ${theme.border}`, 
-                borderRadius: '0.5rem', 
-                background: currentPage === 1 ? (darkMode ? '#374151' : '#f8fafc') : theme.cardBg, 
-                color: currentPage === 1 ? theme.textSecondary : theme.text, 
-                cursor: currentPage === 1 ? 'not-allowed' : 'pointer', 
-                transition: 'all 0.2s ease',
-                fontSize: '0.875rem'
-              }}
-            >
-              <ChevronLeft size={16} /> 이전
-            </button>
-
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  style={{ 
-                    padding: '0.5rem 0.75rem', 
-                    border: `1px solid ${theme.border}`, 
-                    borderRadius: '0.5rem', 
-                    background: currentPage === page ? '#667eea' : theme.cardBg, 
-                    color: currentPage === page ? 'white' : theme.text, 
-                    cursor: 'pointer', 
-                    fontWeight: currentPage === page ? '700' : '400',
-                    fontSize: currentPage === page ? '0.95rem' : '0.875rem',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  {page}
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '0.5rem', 
-                padding: '0.5rem 1rem', 
-                border: `1px solid ${theme.border}`, 
-                borderRadius: '0.5rem', 
-                background: currentPage === totalPages ? (darkMode ? '#374151' : '#f8fafc') : theme.cardBg, 
-                color: currentPage === totalPages ? theme.textSecondary : theme.text, 
-                cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', 
-                transition: 'all 0.2s ease',
-                fontSize: '0.875rem'
-              }}
-            >
-              다음 <ChevronRight size={16} />
-            </button>
-          </div>
-        )}
+        {/* Pagination removed - VirtualizedJobList handles scrolling */}
 
         {/* Application Success Popup */}
         {showApplicationPopup && currentAppliedJob && (
