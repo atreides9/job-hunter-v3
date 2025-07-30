@@ -4,6 +4,7 @@ import "./globals.css";
 import "../styles/apple-theme.css";
 import { AppProvider } from "@/contexts/AppContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { QueryProvider } from "@/providers/QueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,9 +32,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ErrorBoundary>
-          <AppProvider>
-            {children}
-          </AppProvider>
+          <QueryProvider>
+            <AppProvider>
+              {children}
+            </AppProvider>
+          </QueryProvider>
         </ErrorBoundary>
       </body>
     </html>
