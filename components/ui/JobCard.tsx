@@ -60,7 +60,7 @@ const JobCard: React.FC<JobCardProps> = ({
     hover: { 
       y: -4,
       transition: { 
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 300,
         damping: 20
       }
@@ -68,7 +68,7 @@ const JobCard: React.FC<JobCardProps> = ({
     tap: { 
       scale: 0.98,
       transition: { 
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 400,
         damping: 30
       }
@@ -153,7 +153,7 @@ const JobCard: React.FC<JobCardProps> = ({
               </div>
               
               <div className="flex flex-wrap gap-2 mb-3">
-                {job.tags.slice(0, 4).map((tag, index) => (
+                {job.tags.slice(0, 4).map((tag) => (
                   <motion.span
                     key={tag}
                     variants={tagVariants}
@@ -292,7 +292,7 @@ const JobCard: React.FC<JobCardProps> = ({
         </p>
         
         <div className="flex flex-wrap gap-2">
-          {job.tags.slice(0, 3).map((tag, index) => (
+          {job.tags.slice(0, 3).map((tag) => (
             <motion.span
               key={tag}
               variants={tagVariants}

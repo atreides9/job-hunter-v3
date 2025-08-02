@@ -55,7 +55,7 @@ const Button: React.FC<ButtonProps> = ({
     hover: { 
       scale: 1.02,
       transition: { 
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 400,
         damping: 25
       }
@@ -63,7 +63,7 @@ const Button: React.FC<ButtonProps> = ({
     tap: { 
       scale: 0.98,
       transition: { 
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 400,
         damping: 30
       }
@@ -71,24 +71,13 @@ const Button: React.FC<ButtonProps> = ({
     loading: {
       scale: 1,
       transition: { 
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 300,
         damping: 30
       }
     }
   };
 
-  const rippleVariants = {
-    initial: { scale: 0, opacity: 0.5 },
-    animate: { 
-      scale: 4, 
-      opacity: 0,
-      transition: { 
-        duration: 0.6,
-        ease: 'easeOut'
-      }
-    }
-  };
 
   const iconVariants = {
     loading: {
@@ -96,7 +85,7 @@ const Button: React.FC<ButtonProps> = ({
       transition: {
         duration: 1,
         repeat: Infinity,
-        ease: 'linear'
+        ease: 'linear' as const
       }
     }
   };
